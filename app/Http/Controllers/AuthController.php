@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
 use App\Models\Provinsi;
 use Illuminate\Http\Request;
 use App\Models\Akun;
@@ -18,24 +17,18 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        $credentials = $request->only('email_or_username', 'password');
+        $credentials = $request->only('login', 'password');
 
-        $field = filter_var($credentials['email_or_username'], FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+        $login_type = filter_var($credentials['login'], FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
 
-        $validator = Validator::make($request->all(), [
-            'email_or_username' => 'required|string',
-            'password' => 'required|string|min:6',
-        ]);
-
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
-        }
-
-        if (Auth::attempt([$field => $credentials['email_or_username'], 'password' => $credentials['password']])) {
+        if (Auth::attempt([$login_type => $credentials['login'], 'password' => $credentials['password']])) {
+            $request->session()->regenerate();
             return redirect()->intended('/dashboard');
         }
 
-        return back()->withErrors(['email_or_username' => 'These credentials do not match our records.']);
+        return back()->withErrors([
+            'login' => 'Username/email atau password salah.',
+        ]);
     }
 
     public function registerForm()

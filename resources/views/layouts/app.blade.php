@@ -6,26 +6,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'TotaCom')</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#16a34a',
+                        light: '#f1f5f9',
+                    }
+                }
+            }
+        }
+    </script>
 </head>
 
-<body class="bg-gray-100">
+<body class="bg-gray-100 font-sans">
 
-    <!-- Navbar -->
-    <nav class="bg-blue-600 text-white p-4">
-        <div class="flex items-center justify-between">
-            <a href="/" class="text-2xl font-semibold">TotaCom</a>
-            <div>
-                <a href="/login" class="text-sm font-semibold hover:text-blue-200">Login</a>
-                <a href="/register" class="ml-4 text-sm font-semibold hover:text-blue-200">Register</a>
-            </div>
-        </div>
-    </nav>
+    {{-- Navbar for public pages --}}
+    @include('components.public-navbar')
 
-    <!-- Main Content -->
-    <main class="container mx-auto p-6">
-        @yield('content')
-    </main>
+    {{-- Main Content --}}
+    <div class="flex-1 flex flex-col overflow-hidden">
 
+        {{-- Content --}}
+        <main class="flex-1 overflow-y-auto p-4 md:p-6">
+            @yield('content')
+        </main>
+    </div>
+
+    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 </body>
 
 </html>

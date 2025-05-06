@@ -17,9 +17,8 @@ Route::get('/api/kabupaten/{provinsiId}', [KabupatenController::class, 'getKabup
 
 Route::get('/api/kecamatan/{kabupatenId}', [KecamatanController::class, 'getKecamatan']);
 
-Route::get('/', function () {
-    return redirect()->route('login');
-});
+Route::get('/', function () {return redirect()->route('login');});
 
+Route::get('/dashboard', function () {return view('admin.dashboard');})->middleware('auth')->name('dashboard');
 
 require base_path('routes/api.php');

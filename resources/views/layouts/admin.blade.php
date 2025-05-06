@@ -4,31 +4,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
+    <title>@yield('title', 'Admin Dashboard')</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#16a34a',
+                        light: '#f1f5f9',
+                    }
+                }
+            }
+        }
+    </script>
 </head>
 
-<body class="bg-gray-100">
+<body class="bg-gray-100 font-sans">
 
-    <div class="flex min-h-screen">
-        <!-- Sidebar -->
-        <div class="w-64 bg-blue-600 p-6 text-white">
-            <h2 class="text-2xl font-semibold mb-8">Admin Panel</h2>
-            <ul>
-                <li><a href="#" class="block py-2 px-4 rounded hover:bg-blue-700">Dashboard</a></li>
-                <li><a href="#" class="block py-2 px-4 rounded hover:bg-blue-700">Manage Users</a></li>
-                <li><a href="#" class="block py-2 px-4 rounded hover:bg-blue-700">Settings</a></li>
-            </ul>
-        </div>
+    <div x-data="{
+        sidebarOpen: window.innerWidth >= 768,
+        toggleSidebar() {
+            this.sidebarOpen = !this.sidebarOpen;
+        },
+        init() {
+            const updateSidebar = () => {
+                this.sidebarOpen = window.innerWidth >= 768;
+            };
+            window.addEventListener('resize', updateSidebar);
+            updateSidebar(); // jalankan saat init juga
+        }
+    }"
+    x-init="init()"
+    class="flex h-screen" x-cloak>
 
-        <!-- Main Content -->
-        <div class="flex-1 p-6">
-            <h1 class="text-3xl font-semibold text-gray-700 mb-6">Welcome to Admin Dashboard</h1>
-            <!-- Content goes here -->
-            @yield('content')
+        {{-- Sidebar Component --}}
+        <div x-show="sidebarOpen && window.innerWidth < 768" x-transition class="fixed inset-0 bg-black bg-opacity-40 z-20 md:hidden" @click="sidebarOpen = false"></div>
+        @include('components.sidebar')
+
+        {{-- Main Content --}}
+        <div class="flex-1 flex flex-col overflow-hidden ml-0">
+
+            {{-- Navbar Component --}}
+            @include('components.navbar')
+
+            {{-- Content --}}
+            <main class="flex-1 overflow-y-auto p-4 md:p-6">
+                @yield('content')
+            </main>
         </div>
     </div>
 
+    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 </body>
 
 </html>
