@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 class JenisSeeder extends Seeder
 {
-    public function run()
+    public function run(): void
     {
         DB::table('jenises')->insert([
             ['nama_jenis' => 'Pupuk'],

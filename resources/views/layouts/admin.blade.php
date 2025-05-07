@@ -34,12 +34,11 @@
             window.addEventListener('resize', updateSidebar);
             updateSidebar(); // jalankan saat init juga
         }
-    }"
-    x-init="init()"
-    class="flex h-screen" x-cloak>
+    }" x-init="init()" class="flex h-screen" x-cloak>
 
         {{-- Sidebar Component --}}
-        <div x-show="sidebarOpen && window.innerWidth < 768" x-transition class="fixed inset-0 bg-black bg-opacity-40 z-20 md:hidden" @click="sidebarOpen = false"></div>
+        <div x-show="sidebarOpen && window.innerWidth < 768" x-transition
+            class="fixed inset-0 bg-black bg-opacity-40 z-20 md:hidden" @click="sidebarOpen = false"></div>
         @include('components.sidebar')
 
         {{-- Main Content --}}
@@ -49,7 +48,7 @@
             @include('components.navbar')
 
             {{-- Content --}}
-            <main class="flex-1 overflow-y-auto p-4 md:p-6">
+            <main class="flex-1 overflow-y-auto p-2 md:p-4">
                 @yield('content')
             </main>
         </div>

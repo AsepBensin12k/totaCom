@@ -14,7 +14,13 @@ class Akun extends Authenticatable
     protected $primaryKey = 'id_akun';
 
     protected $fillable = [
-        'username', 'password', 'nama', 'email', 'no_hp', 'id_role', 'id_alamat',
+        'username',
+        'password',
+        'nama',
+        'email',
+        'no_hp',
+        'id_role',
+        'id_alamat',
     ];
 
     protected $hidden = [
@@ -31,5 +37,9 @@ class Akun extends Authenticatable
     {
         return $this->belongsTo(Alamat::class, 'id_alamat', 'id_alamat');
     }
-}
 
+    public function pesanans()
+    {
+        return $this->hasMany(Pesanan::class, 'id_akun', 'id_akun');
+    }
+}

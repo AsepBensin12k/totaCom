@@ -10,10 +10,8 @@ return new class extends Migration
     {
         Schema::create('riwayat_transaksies', function (Blueprint $table) {
             $table->bigIncrements('id_riwayat');
-
-            $table->unsignedBigInteger('id_detail')->unique();
+            $table->unsignedBigInteger('id_detail');
             $table->foreign('id_detail')->references('id_detail')->on('detail_pesanans')->onDelete('cascade');
-
             $table->timestamps();
         });
     }

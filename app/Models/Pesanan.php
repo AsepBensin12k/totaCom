@@ -14,8 +14,12 @@ class Pesanan extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'tanggal', 'id_status', 'id_metode', 'id_akun', 'id_produk', 'jumlah_produk',
+        'tanggal',
+        'id_status',
+        'id_metode',
+        'id_akun'
     ];
+
 
     // Relasi dengan Status
     public function status()
@@ -34,13 +38,6 @@ class Pesanan extends Model
     {
         return $this->belongsTo(Akun::class, 'id_akun', 'id_akun');
     }
-
-    // Relasi dengan Produk
-    public function produk()
-    {
-        return $this->belongsTo(Produk::class, 'id_produk', 'id_produk');
-    }
-
     // Relasi dengan Detail Pesanan
     public function detailPesanans()
     {
