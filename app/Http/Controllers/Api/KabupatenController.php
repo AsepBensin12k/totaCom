@@ -13,6 +13,4 @@ class KabupatenController extends Controller
 
         return response()->json($kabupaten);
     }
-
-
 }

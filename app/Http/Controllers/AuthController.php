@@ -33,7 +33,7 @@ class AuthController extends Controller
 
     public function registerForm()
     {
-        $provinsis = Provinsi::where('nama_provinsi', 'Jawa Timur')->get();
+        $provinsis = Provinsi::all(['id', 'nama_provinsi']);
         return view('auth.register', compact('provinsis'));
     }
 
@@ -49,6 +49,7 @@ class AuthController extends Controller
             'provinsi' => 'required',
             'kabupaten' => 'required',
             'kecamatan' => 'required',
+            'detail_alamat' => 'required|string|max:255',
         ]);
 
         $akun = Akun::create([
@@ -58,10 +59,10 @@ class AuthController extends Controller
             'no_hp' => $request->no_hp,
             'password' => Hash::make($request->password),
             'id_role' => 2,
-            'id_alamat' => 1,
             'provinsi_id' => $request->provinsi,
             'kabupaten_id' => $request->kabupaten,
             'kecamatan_id' => $request->kecamatan,
+            'detail_alamat' => $request->detail_alamat,
         ]);
 
 

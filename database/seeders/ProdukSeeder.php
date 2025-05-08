@@ -51,7 +51,7 @@ class ProdukSeeder extends Seeder
                 'gambar' => '',
                 'harga' => 300000,
                 'stok' => 1500,
-                'id_jenis' => 2,
+                'id_jenis' => 4,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
