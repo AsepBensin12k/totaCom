@@ -6,15 +6,17 @@ use App\Models\Alamat;
 use App\Models\Akun;
 use Illuminate\Http\Request;
 use App\Models\Provinsi;
+use App\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
     public function loginForm()
     {
         if (Auth::check()) {
-            return redirect()->route('dashboard');
+            return $this->redirectToDashboard();
         }
         return view('auth.login');
     }
@@ -22,35 +24,53 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $credentials = $request->validate([
-            'email' => ['required', 'email'],
+            'login' => ['required'],
             'password' => ['required'],
         ]);
 
-        if (Auth::attempt($credentials)) {
+        $fieldType = filter_var($credentials['login'], FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+
+        if (Auth::attempt([$fieldType => $credentials['login'], 'password' => $credentials['password']])) {
             $request->session()->regenerate();
 
             $user = Auth::user();
-            $role = $user->role->role;
 
-            // Arahkan sesuai dengan role
-            if ($role == 'admin') {
-                return redirect()->route('dashboard');
-            } elseif ($role == 'customer') {
-                return redirect()->route('user.dashboard');
-            } else {
-                return redirect()->route('dashboard');
+            if (!$user->role) {
+                Auth::logout();
+                return redirect('/login')->withErrors([
+                    'login' => 'Akun Anda tidak memiliki role yang valid.'
+                ]);
             }
+
+            return $this->redirectToDashboard();
         }
 
         return back()->withErrors([
-            'email' => 'Email atau password yang Anda masukkan salah.',
+            'login' => 'Username/email atau password yang Anda masukkan salah.',
         ])->withInput($request->except('password'));
+    }
+
+    protected function redirectToDashboard()
+    {
+        $user = Auth::user();
+
+        switch ($user->role->role) {
+            case 'admin':
+                return redirect()->route('dashboard');
+            case 'customer':
+                return redirect()->route('user.dashboard');
+            default:
+                Auth::logout();
+                return redirect('/login')->withErrors([
+                    'login' => 'Role tidak dikenali.'
+                ]);
+        }
     }
 
     public function registerForm()
     {
         if (Auth::check()) {
-            return redirect()->route('dashboard');
+            return $this->redirectToDashboard();
         }
 
         $provinsis = Provinsi::select('id_provinsi', 'nama_provinsi')
@@ -74,25 +94,35 @@ class AuthController extends Controller
             'password' => 'required|string|min:8|confirmed',
         ]);
 
-        $alamat = Alamat::firstOrCreate([
-            'id_provinsi' => $request->provinsi,
-            'id_kabupaten' => $request->kabupaten,
-            'id_kecamatan' => $request->kecamatan,
-            'detail_alamat' => $request->detail_alamat,
-        ]);
+        try {
+            $alamat = Alamat::firstOrCreate([
+                'id_provinsi' => $request->provinsi,
+                'id_kabupaten' => $request->kabupaten,
+                'id_kecamatan' => $request->kecamatan,
+                'detail_alamat' => $request->detail_alamat,
+            ]);
 
-        $user = Akun::create([
-            'username' => $request->username,
-            'nama' => $request->nama,
-            'email' => $request->email,
-            'no_hp' => $request->no_hp,
-            'id_alamat' => $alamat->id_alamat,
-            'password' => Hash::make($request->password),
-        ]);
+            $customerRole = Role::where('role', 'customer')->firstOrFail();
 
-        Auth::login($user);
+            $user = Akun::create([
+                'username' => $request->username,
+                'nama' => $request->nama,
+                'email' => $request->email,
+                'no_hp' => $request->no_hp,
+                'id_alamat' => $alamat->id_alamat,
+                'id_role' => $customerRole->id_role,
+                'password' => Hash::make($request->password),
+            ]);
 
-        return redirect()->route('user.dashboard');
+            Auth::login($user);
+
+            return redirect()->route('user.dashboard');
+        } catch (\Exception $e) {
+            Log::error('Registration error: ' . $e->getMessage());
+            return back()->withErrors([
+                'error' => 'Terjadi kesalahan saat registrasi. Silakan coba lagi.'
+            ])->withInput();
+        }
     }
 
     public function logout(Request $request)
