@@ -12,7 +12,7 @@ class KecamatanSeeder extends Seeder
 {
     public function run(): void
     {
-        $kabupatenId = 1;
+        $kabupatenId = 9;
         $response = Http::get('https://emsifa.github.io/api-wilayah-indonesia/api/districts/3509.json');
 
         if ($response->successful()) {
@@ -20,10 +20,10 @@ class KecamatanSeeder extends Seeder
             if (is_array($kecamatanData)) {
                 foreach ($kecamatanData as $item) {
                     Kecamatan::updateOrCreate(
-                        ['kode_kecamatan' => $item['id']],  // Cek kode kecamatan untuk mencegah duplikasi
+                        ['kode_kecamatan' => $item['id']],
                         [
-                            'nama_kecamatan' => $item['name'],  // Nama kecamatan
-                            'id_kabupaten' => $kabupatenId,     // Hubungkan dengan ID Kabupaten yang sudah ditentukan
+                            'nama_kecamatan' => $item['name'],
+                            'id_kabupaten' => $kabupatenId,
                         ]
                     );
                 }

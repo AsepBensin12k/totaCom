@@ -12,6 +12,13 @@ class Alamat extends Model
     protected $table = 'alamats';
     protected $primaryKey = 'id_alamat';
 
+    protected $fillable = [
+        'id_provinsi',
+        'id_kabupaten',
+        'id_kecamatan',
+        'detail_alamat'
+    ];
+
     public function kecamatan()
     {
         return $this->belongsTo(Kecamatan::class, 'id_kecamatan');
@@ -25,5 +32,10 @@ class Alamat extends Model
     public function provinsi()
     {
         return $this->belongsTo(Provinsi::class, 'id_provinsi');
+    }
+
+    public function akuns()
+    {
+        return $this->hasMany(Akun::class, 'id_alamat', 'id_alamat');
     }
 }

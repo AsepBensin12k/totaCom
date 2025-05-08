@@ -26,18 +26,12 @@
 
 <body class="bg-gray-100">
 
-    <div class="min-h-screen flex items-center justify-center p-4">
-        <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-4xl">
-            <div class="text-center mb-8">
-                <h1 class="text-3xl font-bold text-gray-800">Daftar Akun Baru</h1>
-                <p class="text-gray-600 mt-2">Isi formulir berikut untuk membuat akun</p>
-            </div>
+    <div class="min-h-screen flex items-center justify-center">
+        <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-sm">
 
-            <div class="bg-blue-50 p-6 rounded-lg">
-                @yield('content')
-            </div>
+            @yield('content')
 
-            <div class="mt-6 text-center">
+            <div class="mt-4 text-center">
                 <p class="text-sm text-gray-600">@yield('footer-text')</p>
             </div>
         </div>
