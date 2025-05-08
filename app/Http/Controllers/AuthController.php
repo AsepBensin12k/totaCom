@@ -2,74 +2,98 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Alamat;
+use App\Models\Akun;
+use Illuminate\Http\Request;
+use App\Models\Provinsi;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use App\Models\Provinsi;
-use Illuminate\Http\Request;
-use App\Models\Akun;
 
 class AuthController extends Controller
 {
     public function loginForm()
     {
+        if (Auth::check()) {
+            return redirect()->route('dashboard');
+        }
         return view('auth.login');
     }
 
     public function login(Request $request)
     {
-        $credentials = $request->only('login', 'password');
+        $credentials = $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required'],
+        ]);
 
-        $login_type = filter_var($credentials['login'], FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
-
-        if (Auth::attempt([$login_type => $credentials['login'], 'password' => $credentials['password']])) {
+        if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            return redirect()->intended('/dashboard');
+
+            $user = Auth::user();
+            $role = $user->role->role;
+
+            // Arahkan sesuai dengan role
+            if ($role == 'admin') {
+                return redirect()->route('dashboard');
+            } elseif ($role == 'customer') {
+                return redirect()->route('user.dashboard');
+            } else {
+                return redirect()->route('dashboard');
+            }
         }
 
         return back()->withErrors([
-            'login' => 'Username/email atau password salah.',
-        ]);
+            'email' => 'Email atau password yang Anda masukkan salah.',
+        ])->withInput($request->except('password'));
     }
 
     public function registerForm()
     {
-        $provinsis = Provinsi::all(['id', 'nama_provinsi']);
+        if (Auth::check()) {
+            return redirect()->route('dashboard');
+        }
+
+        $provinsis = Provinsi::select('id_provinsi', 'nama_provinsi')
+            ->where('nama_provinsi', 'JAWA TIMUR')
+            ->get();
+
         return view('auth.register', compact('provinsis'));
     }
-
 
     public function register(Request $request)
     {
         $request->validate([
-            'username' => 'required|unique:akuns',
-            'email' => 'required|email|unique:akuns',
-            'password' => 'required|confirmed|min:6',
-            'nama' => 'required',
-            'no_hp' => 'required|unique:akuns',
-            'provinsi' => 'required',
-            'kabupaten' => 'required',
-            'kecamatan' => 'required',
-            'detail_alamat' => 'required|string|max:255',
+            'username' => 'required|string|max:255|unique:akuns,username',
+            'nama' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:akuns,email',
+            'no_hp' => 'required|string|max:20',
+            'provinsi' => 'required|exists:provinsis,id_provinsi',
+            'kabupaten' => 'required|exists:kabupatens,id_kabupaten',
+            'kecamatan' => 'required|exists:kecamatans,id_kecamatan',
+            'detail_alamat' => 'required|string',
+            'password' => 'required|string|min:8|confirmed',
         ]);
 
-        $akun = Akun::create([
-            'username' => $request->username,
-            'email' => $request->email,
-            'nama' => $request->nama,
-            'no_hp' => $request->no_hp,
-            'password' => Hash::make($request->password),
-            'id_role' => 2,
-            'provinsi_id' => $request->provinsi,
-            'kabupaten_id' => $request->kabupaten,
-            'kecamatan_id' => $request->kecamatan,
+        $alamat = Alamat::firstOrCreate([
+            'id_provinsi' => $request->provinsi,
+            'id_kabupaten' => $request->kabupaten,
+            'id_kecamatan' => $request->kecamatan,
             'detail_alamat' => $request->detail_alamat,
         ]);
 
+        $user = Akun::create([
+            'username' => $request->username,
+            'nama' => $request->nama,
+            'email' => $request->email,
+            'no_hp' => $request->no_hp,
+            'id_alamat' => $alamat->id_alamat,
+            'password' => Hash::make($request->password),
+        ]);
 
-        Auth::login($akun);
-        return redirect('/dashboard');
+        Auth::login($user);
+
+        return redirect()->route('user.dashboard');
     }
-
 
     public function logout(Request $request)
     {

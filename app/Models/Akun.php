@@ -19,8 +19,8 @@ class Akun extends Authenticatable
         'nama',
         'email',
         'no_hp',
-        'id_role',
         'id_alamat',
+        'role',
     ];
 
     protected $hidden = [
@@ -28,15 +28,16 @@ class Akun extends Authenticatable
         'remember_token',
     ];
 
+    public function alamat()
+    {
+        return $this->belongsTo(Alamat::class, 'id_alamat', 'id_alamat');
+    }
+
     public function role()
     {
         return $this->belongsTo(Role::class, 'id_role', 'id_role');
     }
 
-    public function alamat()
-    {
-        return $this->belongsTo(Alamat::class, 'id_alamat', 'id_alamat');
-    }
 
     public function pesanans()
     {
