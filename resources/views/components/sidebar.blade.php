@@ -22,12 +22,18 @@
             Manajemen Stok
         </a>
         <a href="/pesanan" class="block px-4 py-2 rounded-lg hover:bg-gray-200">Pesanan</a>
-        <a href="/laporan" class="block px-4 py-2 rounded-lg hover:bg-gray-200">Manajemen Pesanan</a>
+        <a href=""{{ route('analisa.index') }}"
+            class="block px-4 py-2 rounded-lg {{ request()->routeIs('analisa.index') ? 'bg-teal-600 text-white font-semibold' : 'hover:bg-teal-100' }}">Manajemen
+            Pesanan</a>
         <a href="{{ route('analisa.index') }}"
             class="block px-4 py-2 rounded-lg {{ request()->routeIs('analisa.index') ? 'bg-teal-600 text-white font-semibold' : 'hover:bg-teal-100' }}">
             Analisis Produk
         </a>
-        <a href="/laporan" class="block px-4 py-2 rounded-lg hover:bg-gray-200">Data Akun</a>
+        <a href="{{ route('data_akun.index') }}"
+            class="block px-4 py-2 rounded-lg {{ request()->routeIs('data_akun.index') ? 'bg-teal-600 text-white font-semibold' : 'hover:bg-teal-100' }}">
+            Data Akun
+        </a>
+
         <a href="/laporan" class="block px-4 py-2 rounded-lg hover:bg-gray-200">Profil</a>
     </nav>
     <form action="{{ route('logout') }}" method="POST" class="p-4 border-t">
