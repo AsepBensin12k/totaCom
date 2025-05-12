@@ -63,7 +63,7 @@
                             <li>
                                 <button type="submit" name="filter" value="perbulan"
                                     class="block w-full px-4 py-2 text-left hover:bg-teal-100 rounded transition {{ request('filter') == 'perbulan' ? 'font-semibold text-teal-600' : '' }}">
-                                    Per Bulan
+                                    1 Bulan Terakhir
                                 </button>
                             </li>
                             <li>
