@@ -8,7 +8,7 @@
 
 
     <a href="{{ route('dashboard') }}" class="flex items-center px-6 py-4 space-x-3 border-b border-gray-200">
-        <img src="{{ asset('images/logo.png') }}" alt="Logo" class="h-12 w-auto">
+        <img src="{{ asset('storage/logo/logo.png') }}" alt="Logo" class="h-12 w-auto">
         <span class="text-2xl font-bold text-teal-600">TotaCom</span>
     </a>
 
