@@ -26,7 +26,7 @@ Route::middleware('auth')->group(function () {
     })->name('dashboard');
 
     Route::get('/user/dashboard', function () {
-        return view('user.dashboard');
+        return view('user.dashboard.dashboard');
     })->name('user.dashboard');
 
     Route::get('/analisa', [AnalisaProdukController::class, 'index'])->name('analisa.index');
