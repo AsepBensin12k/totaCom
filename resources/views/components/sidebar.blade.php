@@ -8,7 +8,7 @@
 
 
     <a href="{{ route('dashboard') }}" class="flex items-center px-6 py-4 space-x-3 border-b border-gray-200">
-        <img src="{{ asset('images/logo.png') }}" alt="Logo" class="h-12 w-auto">
+        <img src="{{ asset('storage/logo/logo.png') }}" alt="Logo" class="h-12 w-auto">
         <span class="text-2xl font-bold text-teal-600">TotaCom</span>
     </a>
 
@@ -22,8 +22,8 @@
             Manajemen Stok
         </a>
         <a href="/pesanan" class="block px-4 py-2 rounded-lg hover:bg-gray-200">Pesanan</a>
-        <a href=""{{ route('analisa.index') }}"
-            class="block px-4 py-2 rounded-lg {{ request()->routeIs('analisa.index') ? 'bg-teal-600 text-white font-semibold' : 'hover:bg-teal-100' }}">Manajemen
+        <a href=""{{ route('dashboard') }}"
+            class="block px-4 py-2 rounded-lg {{ request()->routeIs('manajemen_pesanan.index') ? 'bg-teal-600 text-white font-semibold' : 'hover:bg-teal-100' }}">Manajemen
             Pesanan</a>
         <a href="{{ route('analisa.index') }}"
             class="block px-4 py-2 rounded-lg {{ request()->routeIs('analisa.index') ? 'bg-teal-600 text-white font-semibold' : 'hover:bg-teal-100' }}">
@@ -34,7 +34,9 @@
             Data Akun
         </a>
 
-        <a href="/laporan" class="block px-4 py-2 rounded-lg hover:bg-gray-200">Profil</a>
+        <a href="{{ route('profile.index') }}"
+            class="block px-4 py-2 rounded-lg {{ request()->routeIs('profil.index') ? 'bg-teal-600 text-white font-semibold' : 'hover:bg-teal-100' }}">
+            Profile</a>
     </nav>
     <form action="{{ route('logout') }}" method="POST" class="p-4 border-t">
         @csrf

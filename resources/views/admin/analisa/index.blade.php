@@ -4,7 +4,7 @@
 @section('content')
     <div class="container mx-auto px-6 py-6">
         <h2 class="text-2xl font-semibold text-gray-800 mb-4">10 Produk Terlaris Bulan Ini</h2>
-        <p class="text-gray-600 mb-6">Analisa berdasarkan data pesanan yang telah selesai</p>
+        <p class="text-gray-600 mb-6">Analisa ini berdasarkan data pesanan yang telah selesai</p>
 
         @if ($produkTerlaris->isEmpty())
             <div class="bg-blue-100 text-blue-700 text-center py-4 px-6 rounded-md">
@@ -34,11 +34,11 @@
         @endif
     </div>
 
-    {{-- Grafik Penjualan --}}
+
     <div class="container mx-auto px-6 py-6">
         <form method="GET" action="{{ route('analisa.index') }}" class="mb-6">
             <label for="filter" class="mr-2 text-gray-700 font-medium">Filter Waktu:</label>
-            {{-- Dropdown Filter Waktu --}}
+
             <div class="relative inline-block text-left">
                 <form method="GET" action="{{ route('analisa.index') }}">
                     <button id="dropdownFilterButton" data-dropdown-toggle="dropdownFilterMenu" type="button"
@@ -63,7 +63,7 @@
                             <li>
                                 <button type="submit" name="filter" value="perbulan"
                                     class="block w-full px-4 py-2 text-left hover:bg-teal-100 rounded transition {{ request('filter') == 'perbulan' ? 'font-semibold text-teal-600' : '' }}">
-                                    Per Bulan
+                                    1 Bulan Terakhir
                                 </button>
                             </li>
                             <li>
@@ -76,19 +76,15 @@
                     </div>
                 </form>
             </div>
-
         </form>
 
         <h2 class="text-2xl font-semibold text-gray-800 mb-4">Grafik Penjualan Produk</h2>
         <canvas id="grafikPenjualan" height="100"></canvas>
     </div>
 
-    {{-- Grafik Kategori Penyumbang Penjualan --}}
     <div class="container mx-auto px-6 py-6 h-auto">
         <h2 class="text-2xl font-semibold text-gray-800 mb-4">Distribusi Penjualan Berdasarkan Kategori Produk</h2>
-
         <div class="flex flex-col items-center">
-            {{-- Legend di Atas --}}
             <div class="mb-4 flex flex-wrap gap-3">
                 @php
                     $total = array_sum(array_column($kategoriTerlaris->toArray(), 'total_terjual'));
@@ -104,7 +100,6 @@
                 @endforeach
             </div>
 
-            {{-- Pie Chart di Bawah --}}
             <div class="w-full h-96">
                 <canvas id="kategoriPieChart" class="w-full h-full"></canvas>
             </div>
@@ -119,7 +114,6 @@
             menu.classList.toggle('hidden');
         });
 
-        // Grafik Penjualan per Waktu
         const data = @json($data);
         const labels = data.map(item => item.label);
         const values = data.map(item => item.total_terjual);
@@ -169,7 +163,6 @@
             }
         });
 
-        // Pie Chart Kategori Penyumbang Penjualan
         const kategoriData = @json($kategoriTerlaris);
         const kategoriLabels = kategoriData.map(item => item.nama_jenis);
         const kategoriValues = kategoriData.map(item => item.total_terjual);

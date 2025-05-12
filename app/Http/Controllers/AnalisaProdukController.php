@@ -57,7 +57,7 @@ class AnalisaProdukController extends Controller
                 )
                 ->groupBy('label');
         } elseif ($filter == 'perbulan') {
-            // Filter untuk penjualan per bulan
+            // Filter untuk penjualan 1 bulan terakhir
             $month = $request->input('bulan', Carbon::now()->format('m'));
             $year = $request->input('tahun', Carbon::now()->format('Y'));
             $query->whereMonth('pesanans.tanggal', $month)
