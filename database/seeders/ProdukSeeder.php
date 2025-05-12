@@ -12,7 +12,7 @@ class ProdukSeeder extends Seeder
         DB::table('produks')->insert([
             [
                 'nama_produk' => 'Pupuk Sapi',
-                'gambar' => '', // Gambar disesuaikan jika ada file
+                'gambar' => '',
                 'harga' => 7000000,
                 'stok' => 1000,
                 'id_jenis' => 1,
