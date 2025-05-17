@@ -9,7 +9,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('metode_pembayarans', function (Blueprint $table) {
-            $table->id('id_metode'); // Primary Key
+            $table->id('id_metode');
             $table->string('nama_metode')->unique();
             $table->timestamps();
         });

@@ -10,7 +10,7 @@ class ProvinsiController extends Controller
 {
     public function getAllProvinsi(): JsonResponse
     {
-        $provinsis = Provinsi::all(['id_provinsi as id', 'nama_provinsi']);
+        $provinsis = Provinsi::select('id_provinsi', 'nama_provinsi')->get();
         return response()->json($provinsis);
     }
 }

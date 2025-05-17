@@ -7,11 +7,10 @@ use Illuminate\Support\Facades\DB;
 
 class MetodePembayaranSeeder extends Seeder
 {
-    public function run()
+    public function run(): void
     {
         DB::table('metode_pembayarans')->insert([
-            ['nama_metode' => 'Transfer Bank'],
-            ['nama_metode' => 'E-Wallet'],
+            ['nama_metode' => 'Midtrans'],
             ['nama_metode' => 'Cash on Delivery'],
         ]);
     }

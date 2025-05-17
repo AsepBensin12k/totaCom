@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 class AkunSeeder extends Seeder
 {
-    public function run()
+    public function run(): void
     {
         DB::table('akuns')->insert([
             [

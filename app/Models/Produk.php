@@ -14,10 +14,13 @@ class Produk extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'nama_produk', 'gambar', 'harga', 'stok', 'id_jenis',
+        'nama_produk',
+        'gambar',
+        'harga',
+        'stok',
+        'id_jenis',
     ];
 
-    // Relasi dengan Jenis
     public function jenis()
     {
         return $this->belongsTo(Jenis::class, 'id_jenis', 'id_jenis');

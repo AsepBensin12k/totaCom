@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('alamats', function (Blueprint $table) {
             $table->id('id_alamat');
-            $table->string('alamat');
+            $table->string('detail_alamat');
             $table->unsignedBigInteger('id_kecamatan');
             $table->unsignedBigInteger('id_kabupaten');
             $table->unsignedBigInteger('id_provinsi');

@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 class StatusSeeder extends Seeder
 {
-    public function run()
+    public function run(): void
     {
         DB::table('statuses')->insert([
             ['nama_status' => 'dikemas'],

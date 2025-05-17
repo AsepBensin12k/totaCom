@@ -15,17 +15,24 @@ class DetailPesanan extends Model
 
     protected $fillable = [
         'id_pesanan',
+        'id_produk',
+        'qty',
+        'harga',
     ];
 
-    // Relasi ke model Pesanan
+
     public function pesanan()
     {
         return $this->belongsTo(Pesanan::class, 'id_pesanan', 'id_pesanan');
     }
 
-    // Relasi ke model RiwayatTransaksi
     public function riwayatTransaksi()
     {
         return $this->hasMany(RiwayatTransaksi::class, 'id_detail', 'id_detail');
+    }
+
+    public function produk()
+    {
+        return $this->belongsTo(Produk::class, 'id_produk', 'id_produk');
     }
 }

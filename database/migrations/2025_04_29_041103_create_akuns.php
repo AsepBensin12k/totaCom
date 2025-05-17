@@ -15,7 +15,7 @@ return new class extends Migration
             $table->string('nama');
             $table->string('email')->unique();
             $table->string('no_hp')->unique();
-            $table->unsignedBigInteger('id_role');
+            $table->unsignedBigInteger('id_role')->default(2);
             $table->unsignedBigInteger('id_alamat');
             $table->foreign('id_role')->references('id_role')->on('roles')->onDelete('cascade');
             $table->foreign('id_alamat')->references('id_alamat')->on('alamats')->onDelete('cascade');
