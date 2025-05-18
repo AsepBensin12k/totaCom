@@ -4,34 +4,33 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Produk;
+use App\Models\Jenis;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use App\Models\Jenis;
 
 class StokController extends Controller
 {
     public function index(Request $request)
     {
         $query = Produk::with('jenis');
-    
+
         if ($request->has('search') && $request->search != '') {
             $search = $request->search;
-    
+
             $query->where('nama_produk', 'like', "%{$search}%")
                 ->orWhereHas('jenis', function ($q) use ($search) {
                     $q->where('nama_jenis', 'like', "%{$search}%");
                 });
         }
-    
+
         if ($request->has('filter_jenis') && $request->filter_jenis != '') {
             $query->where('id_jenis', $request->filter_jenis);
         }
-    
+
         $produks = $query->get();
-    
+
         return view('admin.stok.index', compact('produks'));
     }
-    
 
     public function create()
     {
@@ -114,5 +113,28 @@ class StokController extends Controller
         $produk->delete();
 
         return redirect()->route('stok.index')->with('success', 'Produk berhasil dihapus!');
+    }
+
+    // new **Fungsi untuk customer lihat produk dengan search & filter kategori**
+    public function produkUser(Request $request)
+    {
+        $query = Produk::with('jenis');
+
+        if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+            $query->where('nama_produk', 'like', "%{$search}%")
+                  ->orWhereHas('jenis', function ($q) use ($search) {
+                      $q->where('nama_jenis', 'like', "%{$search}%");
+                  });
+        }
+
+        if ($request->has('filter_jenis') && $request->filter_jenis != '') {
+            $query->where('id_jenis', $request->filter_jenis);
+        }
+
+        $produks = $query->get();
+        $kategori = Jenis::all();
+
+        return view('user.produk.index', compact('produks', 'kategori'));
     }
 }

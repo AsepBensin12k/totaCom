@@ -13,7 +13,13 @@ class ProfilController extends Controller
     public function index()
     {
         $akun = Auth::user();
-        return view('admin.profile.index', compact('akun'));
+
+        // Tentukan view berdasarkan role user
+        if ($akun->id_role == 1) { // Admin
+            return view('admin.profile.index', compact('akun'));
+        } else { // Customer
+            return view('user.profile.index', compact('akun'));
+        }
     }
 
     public function update(Request $request)
@@ -45,7 +51,13 @@ class ProfilController extends Controller
 
         $akun->save();
 
-        return redirect()->route('profile.index')
-            ->with('success', 'Profil berhasil diperbarui');
+        // Redirect berdasarkan role
+        if ($akun->id_role == 1) { // Admin
+            return redirect()->route('profile.index')
+                ->with('success', 'Profil berhasil diperbarui');
+        } else { // Customer
+            return redirect()->route('profile.index')
+                ->with('success', 'Profil berhasil diperbarui');
+        }
     }
 }

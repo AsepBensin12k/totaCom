@@ -21,21 +21,39 @@ Route::get('/', function () {
 });
 
 Route::middleware('auth')->group(function () {
+    // Admin
     Route::get('/dashboard', function () {
         return view('admin.dashboard.dashboard');
     })->name('dashboard');
 
+    Route::get('/analisa', [AnalisaProdukController::class, 'index'])->name('analisa.index');
+    Route::get('/analisa/grafik', [AnalisaProdukController::class, 'grafik'])->name('analisa.grafik');
+    Route::get('/data-akun', [DataAkunController::class, 'index'])->name('data_akun.index');
+
+    // Profil (umum untuk user dan admin)
+    Route::get('/profile', [ProfilController::class, 'index'])->name('profile.index');
+    Route::put('/profile', [ProfilController::class, 'update'])->name('profile.update');
+
+    // Customer / User
     Route::get('/user/dashboard', function () {
         return view('user.dashboard');
     })->name('user.dashboard');
 
-    Route::get('/analisa', [AnalisaProdukController::class, 'index'])->name('analisa.index');
-    Route::get('/analisa/grafik', [AnalisaProdukController::class, 'grafik'])->name('analisa.grafik');
+    // Produk customer sudah terhubung ke controller StokController@produkUser
+    Route::get('/user/produk', [StokController::class, 'produkUser'])->name('user.produk.index');
 
-    Route::get('/data-akun', [DataAkunController::class, 'index'])->name('data_akun.index');
+    // Dummy routes pesanan - sesuaikan nanti dengan controller
+    Route::get('/user/pesanan/buat', function () {
+        return 'Halaman Buat Pesanan (sementara)';
+    })->name('pesanan.buat');
 
-    Route::get('/profile', [ProfilController::class, 'index'])->name('profile.index');
-    Route::put('/profile', [ProfilController::class, 'update'])->name('profile.update');
+    Route::get('/user/pesanan/lihat', function () {
+        return 'Halaman Lihat Pesanan (sementara)';
+    })->name('pesanan.lihat');
+
+    Route::get('/user/pesanan/riwayat', function () {
+        return 'Halaman Riwayat Pesanan (sementara)';
+    })->name('pesanan.riwayat');
 });
 
 Route::prefix('api')->group(function () {
