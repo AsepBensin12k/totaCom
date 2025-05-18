@@ -64,11 +64,12 @@
                             <div>
                                 <p class="text-sm font-medium text-gray-500">Alamat</p>
                                 <p class="mt-1 text-gray-900">
-                                    @if ($akun->alamat)
+                                    {{-- @if ($akun->alamat)
                                         {{ $akun->alamat }}
                                     @else
                                         -
-                                    @endif
+                                    @endif --}}
+                                    -
                                 </p>
                             </div>
                         </div>
@@ -173,29 +174,17 @@
     </div>
 
     <script>
-        // Password display toggle in profile view
-        function togglePasswordDisplay() {
-            const display = document.getElementById('password-display');
-            if (display.textContent === '••••••••') {
-                display.textContent =
-                    '{{ $akun->password_plain }}'; // Assuming you have this field or use a different method
-            } else {
-                display.textContent = '••••••••';
-            }
-        }
 
-        // Modal functions
         function openEditModal() {
             document.getElementById('editProfileModal').classList.remove('hidden');
-            document.body.style.overflow = 'hidden'; // Prevent scrolling when modal is open
+            document.body.style.overflow = 'hidden';
         }
 
         function closeEditModal() {
             document.getElementById('editProfileModal').classList.add('hidden');
-            document.body.style.overflow = 'auto'; // Re-enable scrolling
+            document.body.style.overflow = 'auto';
         }
 
-        // Close modal when clicking outside
         window.onclick = function(event) {
             const modal = document.getElementById('editProfileModal');
             if (event.target === modal) {

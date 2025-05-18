@@ -22,9 +22,7 @@
             Manajemen Stok
         </a>
         <a href="/pesanan" class="block px-4 py-2 rounded-lg hover:bg-gray-200">Pesanan</a>
-        <a href=""{{ route('dashboard') }}"
-            class="block px-4 py-2 rounded-lg {{ request()->routeIs('manajemen_pesanan.index') ? 'bg-teal-600 text-white font-semibold' : 'hover:bg-teal-100' }}">Manajemen
-            Pesanan</a>
+        <a href="/manajemen_pesanan" class="block px-4 py-2 rounded-lg hover:bg-gray-200">Manajemen Pesanan</a>
         <a href="{{ route('analisa.index') }}"
             class="block px-4 py-2 rounded-lg {{ request()->routeIs('analisa.index') ? 'bg-teal-600 text-white font-semibold' : 'hover:bg-teal-100' }}">
             Analisis Produk
