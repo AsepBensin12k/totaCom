@@ -4,8 +4,15 @@
 @section('content')
 
     @if (session('success'))
-        <div id="success-alert" class="text-green-600 my-4 bg-green-100 p-4 rounded-md shadow-md">
-            {{ session('success') }}
+        <div id="success-alert" class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded shadow-md relative"
+            role="alert">
+            <div class="flex justify-between items-center">
+                <p>{{ session('success') }}</p>
+                <button type="button" class="text-green-700 hover:text-green-900"
+                    onclick="document.getElementById('success-alert').remove()">
+                    <span class="text-2xl">&times;</span>
+                </button>
+            </div>
         </div>
 
         <script>
@@ -16,21 +23,27 @@
         </script>
     @endif
 
+    @php
+        $filterJenisId = request('filter_jenis');
+        $filterJenisNama = $filterJenisId ? \App\Models\Jenis::find($filterJenisId)->nama_jenis : null;
+    @endphp
+
     <div class="container mx-auto px-6 py-6">
         <h1 class="text-3xl font-bold mb-6">Daftar Produk</h1>
 
         <div class="flex flex-col md:flex-row justify-between md:items-center mb-4 gap-4">
             <div class="relative">
                 <button id="dropdownRadioButton" data-dropdown-toggle="dropdownRadio"
-                    class="inline-flex items-center text-white bg-teal-600 border border-teal-600 focus:outline-none hover:bg-teal-700 font-medium rounded-lg text-sm px-4 py-2 shadow-md"
+                    class="inline-flex items-center justify-center text-white bg-teal-600 border border-teal-600 focus:outline-none hover:bg-teal-700 font-medium rounded-lg text-sm px-4 py-2 shadow-md h-10 w-full md:w-auto"
                     type="button">
-                    <svg class="w-5 h-5 me-2 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
+                    <svg class="w-5 h-5 mr-2 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
                         viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M7 7h10M7 12h4m1 8l7-7-7-7v14z" />
                     </svg>
-                    Filter Kategori
-                    <svg class="w-2.5 h-2.5 ms-2.5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
+
+                    {{ $filterJenisNama ? 'Filter: ' . $filterJenisNama : 'Filter Kategori' }}
+                    <svg class="w-2.5 h-2.5 ml-2.5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
                         viewBox="0 0 10 6">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="m1 1 4 4 4-4" />
@@ -40,39 +53,34 @@
                 <div id="dropdownRadio"
                     class="z-10 hidden w-48 bg-white divide-y divide-gray-100 rounded-lg shadow absolute mt-2">
                     <ul class="p-3 space-y-1 text-sm text-gray-800" aria-labelledby="dropdownRadioButton">
-                        @foreach (\App\Models\Jenis::all() as $jenis)
+                        @foreach (\App\Models\Jenis::orderBy('nama_jenis', 'asc')->get() as $jenis)
                             <li>
-                                <a href="{{ route('stok.index', ['filter_jenis' => $jenis->id_jenis]) }}"
+                                <a href="{{ route('stok.index', ['filter_jenis' => $jenis->id_jenis, 'search' => request('search')]) }}"
                                     class="block px-4 py-2 hover:bg-teal-100 rounded transition">
                                     {{ $jenis->nama_jenis }}
                                 </a>
                             </li>
                         @endforeach
+                        <li>
+                            <a href="{{ route('stok.index', ['search' => request('search')]) }}"
+                                class="block px-4 py-2 hover:bg-teal-100 rounded transition">
+                                Semua Kategori
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </div>
 
             <x-search-bar placeholder="Cari produk atau kategori..." class="w-full md:w-1/2" />
 
-            <div>
+            <div class="w-full md:w-auto flex justify-start md:justify-end">
                 <a href="{{ route('stok.create') }}"
-                    class="inline-block bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md shadow-md">
+                    class="inline-block bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md shadow-md w-full md:w-auto">
                     Tambah Produk +
                 </a>
             </div>
         </div>
 
-        @if (request('filter_jenis'))
-            @php
-                $jenisNama = \App\Models\Jenis::find(request('filter_jenis'))->nama_jenis ?? null;
-            @endphp
-            <div class="mb-4 px-4 py-2 bg-blue-100 text-blue-800 rounded-md text-sm w-fit">
-                Filter: <strong>{{ $jenisNama ?? 'Jenis tidak ditemukan' }}</strong>
-                <a href="{{ route('stok.index') }}" class="ml-4 text-red-600 hover:underline text-xs">
-                    Reset Filter
-                </a>
-            </div>
-        @endif
 
         {{-- Tabel Produk --}}
         <div class="relative overflow-x-auto shadow-md sm:rounded-lg bg-white">

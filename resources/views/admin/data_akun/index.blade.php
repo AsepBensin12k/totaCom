@@ -15,7 +15,7 @@
                         <th scope="col" class="px-4 sm:px-6 py-3">Username</th>
                         <th scope="col" class="px-4 sm:px-6 py-3">Email</th>
                         <th scope="col" class="px-4 sm:px-6 py-3">No HP</th>
-                        <th scope="col" class="px-4 sm:px-6 py-3">Alamat</th>
+                        {{-- <th scope="col" class="px-4 sm:px-6 py-3">Alamat</th> --}}
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
@@ -26,9 +26,9 @@
                             <td class="px-4 sm:px-6 py-3 whitespace-nowrap">{{ $akun->username }}</td>
                             <td class="px-4 sm:px-6 py-3 whitespace-nowrap">{{ $akun->email }}</td>
                             <td class="px-4 sm:px-6 py-3 whitespace-nowrap">{{ $akun->no_hp }}</td>
-                            <td class="px-4 sm:px-6 py-3 whitespace-nowrap">
+                            {{-- <td class="px-4 sm:px-6 py-3 whitespace-nowrap">
                                 {{ $akun->alamat->detail ?? '-' }}
-                            </td>
+                            </td> --}}
                         </tr>
                     @empty
                         <tr>
