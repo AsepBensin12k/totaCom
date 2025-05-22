@@ -20,7 +20,6 @@ class DetailPesanan extends Model
         'harga',
     ];
 
-
     public function pesanan()
     {
         return $this->belongsTo(Pesanan::class, 'id_pesanan', 'id_pesanan');

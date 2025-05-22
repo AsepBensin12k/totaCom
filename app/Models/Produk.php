@@ -11,7 +11,7 @@ class Produk extends Model
 
     protected $table = 'produks';
     protected $primaryKey = 'id_produk';
-    public $timestamps = false;
+    public $timestamps = true;
 
     protected $fillable = [
         'nama_produk',
@@ -30,5 +30,11 @@ class Produk extends Model
     public function keranjangs()
     {
         return $this->hasMany(Keranjang::class, 'id_produk', 'id_produk');
+    }
+
+    // Relasi dengan Detail Pesanan
+    public function detailPesanans()
+    {
+        return $this->hasMany(DetailPesanan::class, 'id_produk', 'id_produk');
     }
 }

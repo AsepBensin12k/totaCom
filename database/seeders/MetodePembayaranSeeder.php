@@ -10,8 +10,8 @@ class MetodePembayaranSeeder extends Seeder
     public function run(): void
     {
         DB::table('metode_pembayarans')->insert([
-            ['nama_metode' => 'Midtrans'],
-            ['nama_metode' => 'Cash on Delivery'],
+            ['nama_metode' => 'Transfer'],
+            ['nama_metode' => 'Cash'],
         ]);
     }
 }

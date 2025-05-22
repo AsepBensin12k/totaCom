@@ -11,7 +11,7 @@ class Provinsi extends Model
     use HasFactory;
 
     protected $table = 'provinsis';
-    protected $primaryKey = 'id';
+    protected $primaryKey = 'id_provinsi'; // Ubah dari 'id' ke 'id_provinsi'
     public $timestamps = true;
 
     protected $fillable = [
@@ -21,6 +21,6 @@ class Provinsi extends Model
 
     public function kabupatens(): HasMany
     {
-        return $this->hasMany(Kabupaten::class, 'id_provinsi');
+        return $this->hasMany(Kabupaten::class, 'id_provinsi', 'id_provinsi');
     }
 }

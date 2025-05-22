@@ -11,7 +11,7 @@ class AlamatSeeder extends Seeder
     {
         Alamat::create([
             'detail_alamat' => 'Perumahan Tegal Besar Permai 1, Blok P-4',
-            'id_kecamatan' => 1,
+            'id_kecamatan' => 29,
             'id_kabupaten' => 9,
             'id_provinsi' => 15,
         ]);

@@ -9,6 +9,8 @@ use App\Http\Controllers\StokController;
 use App\Http\Controllers\AnalisaProdukController;
 use App\Http\Controllers\DataAkunController;
 use App\Http\Controllers\ProfilController;
+use App\Http\Controllers\PesananController;
+use App\Http\Controllers\ManajemenPesananController;
 
 Route::get('/login', [AuthController::class, 'loginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
@@ -26,7 +28,7 @@ Route::middleware('auth')->group(function () {
     })->name('dashboard');
 
     Route::get('/user/dashboard', function () {
-        return view('user.dashboard');
+        return view('user.dashboard.dashboard');
     })->name('user.dashboard');
 
     Route::get('/analisa', [AnalisaProdukController::class, 'index'])->name('analisa.index');
@@ -36,6 +38,21 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/profile', [ProfilController::class, 'index'])->name('profile.index');
     Route::put('/profile', [ProfilController::class, 'update'])->name('profile.update');
+
+
+    Route::prefix('admin/pesanan')->group(function () {
+        Route::get('/produk', [PesananController::class, 'index'])->name('pesanan.index');
+        Route::post('/produk/tambah/{id_produk}', [PesananController::class, 'tambahKeranjang'])->name('pesanan.tambahKeranjang');
+        Route::get('/keranjang', [PesananController::class, 'keranjang'])->name('keranjang.index');
+        Route::post('/keranjang/tambah-qty', [PesananController::class, 'tambahQty'])->name('keranjang.tambahQty');
+        Route::post('/keranjang/kurang-qty', [PesananController::class, 'kurangQty'])->name('keranjang.kurangQty');
+        Route::post('/keranjang/hapus', [PesananController::class, 'hapusKeranjang'])->name('keranjang.hapus');
+        Route::post('/keranjang/checkout', [PesananController::class, 'checkout'])->name('keranjang.checkout');
+    });
+
+
+    Route::get('/admin/manajemen-pesanan', [ManajemenPesananController::class, 'index'])->name('manajemen.pesanan.index');
+    Route::post('/admin/manajemen-pesanan/update-status/{id}', [ManajemenPesananController::class, 'updateStatus'])->name('manajemen.pesanan.updateStatus');
 });
 
 Route::prefix('api')->group(function () {

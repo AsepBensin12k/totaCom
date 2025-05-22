@@ -21,9 +21,10 @@
             class="block px-4 py-2 rounded-lg {{ request()->routeIs('stok.*') ? 'bg-teal-600 text-white font-semibold' : 'hover:bg-teal-100' }}">
             Manajemen Stok
         </a>
-        <a href="/pesanan" class="block px-4 py-2 rounded-lg hover:bg-gray-200">Pesanan</a>
-        <a href=""{{ route('dashboard') }}"
-            class="block px-4 py-2 rounded-lg {{ request()->routeIs('manajemen_pesanan.index') ? 'bg-teal-600 text-white font-semibold' : 'hover:bg-teal-100' }}">Manajemen
+        <a href="{{ route('pesanan.index') }}"
+            class="block px-4 py-2 rounded-lg {{ request()->routeIs('pesanan.index') ? 'bg-teal-600 text-white font-semibold' : 'hover:bg-teal-100' }}">Pesanan</a>
+        <a href="{{ route('manajemen.pesanan.index') }}"
+            class="block px-4 py-2 rounded-lg {{ request()->routeIs('manajemen.pesanan.index') ? 'bg-teal-600 text-white font-semibold' : 'hover:bg-teal-100' }}">Manajemen
             Pesanan</a>
         <a href="{{ route('analisa.index') }}"
             class="block px-4 py-2 rounded-lg {{ request()->routeIs('analisa.index') ? 'bg-teal-600 text-white font-semibold' : 'hover:bg-teal-100' }}">
