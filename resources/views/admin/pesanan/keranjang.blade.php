@@ -85,8 +85,8 @@
                         <span>Cash</span>
                     </label>
                     <label class="flex items-center gap-2 p-3 border rounded cursor-pointer hover:bg-gray-100">
-                        <input type="radio" name="metode_pembayaran" value="midtrans" required>
-                        <span>Midtrans</span>
+                        <input type="radio" name="metode_pembayaran" value="transfer" required>
+                        <span>Transfer</span>
                     </label>
                 </div>
             </div>

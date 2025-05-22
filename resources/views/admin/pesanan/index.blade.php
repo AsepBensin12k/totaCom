@@ -1,10 +1,10 @@
 @extends('layouts.admin')
 
+@section('title', 'Pesanan')
+
 @section('content')
-    <div class="container mx-auto p-4">
-        <div class="mb-6">
-            <h1 class="text-2xl font-bold">Daftar Produk</h1>
-        </div>
+    <div class="container mx-auto px-4 py-4">
+        <h1 class="text-3xl font-bold mb-4">Daftar Produk</h1>
 
         @if (session('success'))
             <div id="success-alert"

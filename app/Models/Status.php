@@ -14,7 +14,7 @@ class Status extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'status',
+        'nama_status',
     ];
 
     // Relasi dengan Pesanan

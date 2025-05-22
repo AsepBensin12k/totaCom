@@ -11,8 +11,14 @@ class KecamatanController extends Controller
     public function getKecamatanByKabupaten($kabupatenId): JsonResponse
     {
         $kecamatan = Kecamatan::where('id_kabupaten', $kabupatenId)
-            ->get(['id_kecamatan as id', 'nama_kecamatan']);
+            ->get(['id_kecamatan', 'nama_kecamatan']);
 
         return response()->json($kecamatan);
+    }
+
+    public function index()
+    {
+        $kecamatans = Kecamatan::all();
+        return response()->json($kecamatans);
     }
 }

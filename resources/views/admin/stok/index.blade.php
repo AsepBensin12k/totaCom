@@ -3,38 +3,38 @@
 @section('title', 'Manajemen Stok')
 @section('content')
 
-    @if (session('success'))
-        <div id="success-alert" class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded shadow-md relative"
-            role="alert">
-            <div class="flex justify-between items-center">
-                <p>{{ session('success') }}</p>
-                <button type="button" class="text-green-700 hover:text-green-900"
-                    onclick="document.getElementById('success-alert').remove()">
-                    <span class="text-2xl">&times;</span>
-                </button>
-            </div>
-        </div>
-
-        <script>
-            setTimeout(() => {
-                const alert = document.getElementById('success-alert');
-                if (alert) alert.remove();
-            }, 3000);
-        </script>
-    @endif
-
     @php
         $filterJenisId = request('filter_jenis');
         $filterJenisNama = $filterJenisId ? \App\Models\Jenis::find($filterJenisId)->nama_jenis : null;
     @endphp
 
-    <div class="container mx-auto px-6 py-6">
-        <h1 class="text-3xl font-bold mb-6">Daftar Produk</h1>
+    <div class="container mx-auto px-4 py-4">
+        <h1 class="text-3xl font-bold mb-4">Daftar Produk</h1>
 
+        @if (session('success'))
+            <div id="success-alert"
+                class="bg-green-100 border-l-4 border-green-500 text-green-700 p-3 mb-6 rounded shadow-md relative"
+                role="alert">
+                <div class="flex justify-between items-center">
+                    <p>{{ session('success') }}</p>
+                    <button type="button" class="text-green-700 hover:text-green-900"
+                        onclick="document.getElementById('success-alert').remove()">
+                        <span class="text-2xl">&times;</span>
+                    </button>
+                </div>
+            </div>
+
+            <script>
+                setTimeout(() => {
+                    const alert = document.getElementById('success-alert');
+                    if (alert) alert.remove();
+                }, 3000);
+            </script>
+        @endif
         <div class="flex flex-col md:flex-row justify-between md:items-center mb-4 gap-4">
             <div class="relative">
                 <button id="dropdownRadioButton" data-dropdown-toggle="dropdownRadio"
-                    class="inline-flex items-center justify-center text-white bg-teal-600 border border-teal-600 focus:outline-none hover:bg-teal-700 font-medium rounded-lg text-sm px-4 py-2 shadow-md h-10 w-full md:w-auto"
+                    class="inline-flex items-center justify-center text-white bg-teal-500 focus:outline-none hover:bg-teal-700 font-medium rounded-lg text-sm px-4 py-2 shadow-md h-10 w-full md:w-auto"
                     type="button">
                     <svg class="w-5 h-5 mr-2 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
                         viewBox="0 0 24 24" stroke="currentColor">
@@ -71,7 +71,7 @@
                 </div>
             </div>
 
-            <x-search-bar placeholder="Cari produk atau kategori..." class="w-full md:w-1/2" />
+            <x-search-bar placeholder="Cari produk atau kategori..." class=" w-full md:max-w-xl" />
 
             <div class="w-full md:w-auto flex justify-start md:justify-end">
                 <a href="{{ route('stok.create') }}"
@@ -84,46 +84,42 @@
 
         {{-- Tabel Produk --}}
         <div class="relative overflow-x-auto shadow-md sm:rounded-lg bg-white">
-            <table class="min-w-full divide-y divide-blue-200 text-sm text-left text-gray-700">
-                <thead class="text-gray-700 bg-blue-100">
+            <table class="min-w-full bg-white border border-gray-300 shadow">
+                <thead class="bg-teal-500 text-white text-sm">
                     <tr>
-                        <th scope="col" class="px-6 py-3">Nama Produk</th>
-                        <th scope="col" class="px-6 py-3">Kategori</th>
-                        <th scope="col" class="px-6 py-3">Harga</th>
-                        <th scope="col" class="px-6 py-3">Stok</th>
-                        <th scope="col" class="px-6 py-3">Gambar</th>
-                        <th scope="col" class="px-6 py-3">Aksi</th>
+                        <th class="px-4 py-3 border">ID</th>
+                        <th class="px-4 py-3 border">Nama Produk</th>
+                        <th class="px-4 py-3 border">Kategori</th>
+                        <th class="px-4 py-3 border">Stok</th>
+                        <th class="px-4 py-3 border">Harga</th>
+                        <th class="px-4 py-3 border">Aksi</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="text-sm text-gray-700">
                     @forelse ($produks as $produk)
-                        <tr class="border-b">
-                            <td class="px-6 py-4">{{ $produk->nama_produk }}</td>
-                            <td class="px-6 py-4">{{ $produk->jenis->nama_jenis ?? 'Tidak diketahui' }}</td>
-                            <td class="px-6 py-4">Rp{{ number_format($produk->harga, 0, ',', '.') }}</td>
-                            <td class="px-6 py-4">{{ $produk->stok }}</td>
-                            <td class="px-6 py-4">
-                                @if ($produk->gambar)
-                                    <img src="{{ asset('storage/' . $produk->gambar) }}" class="w-20 h-auto rounded">
-                                @else
-                                    <span class="text-gray-500">Tidak ada gambar</span>
-                                @endif
-                            </td>
-                            <td class="px-6 py-4 space-x-2">
+                        <tr class="hover:bg-gray-50">
+                            <td class="border px-4 py-2 text-center">{{ $produk->id_produk }}</td>
+                            <td class="border px-4 py-2">{{ $produk->nama_produk }}</td>
+                            <td class="border px-4 py-2 text-center">{{ $produk->jenis->nama_jenis ?? '-' }}</td>
+                            <td class="border px-4 py-2 text-center">{{ $produk->stok }}</td>
+                            <td class="border px-4 py-2 text-right">Rp{{ number_format($produk->harga, 0, ',', '.') }}</td>
+                            <td class="border px-4 py-2 text-center">
                                 <a href="{{ route('stok.edit', $produk->id_produk) }}"
-                                    class="text-blue-600 hover:underline">Edit</a>
+                                    class="bg-blue-500 hover:bg-blue-600 text-white text-sm px-3 py-1 rounded mr-2">Edit</a>
                                 <form action="{{ route('stok.destroy', $produk->id_produk) }}" method="POST"
-                                    class="inline">
+                                    class="inline-block" onsubmit="return confirm('Yakin ingin menghapus produk ini?')">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" onclick="return confirm('Yakin ingin hapus?')"
-                                        class="text-red-600 hover:underline">Hapus</button>
+                                    <button type="submit"
+                                        class="bg-red-500 hover:bg-red-600 text-white text-sm px-3 py-1 rounded">Hapus</button>
                                 </form>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="px-6 py-4 text-center text-gray-500">Belum ada data produk.</td>
+                            <td colspan="6" class="border px-4 py-6 text-center text-gray-500">
+                                Tidak ada data produk.
+                            </td>
                         </tr>
                     @endforelse
                 </tbody>

@@ -10,6 +10,7 @@ use App\Http\Controllers\AnalisaProdukController;
 use App\Http\Controllers\DataAkunController;
 use App\Http\Controllers\ProfilController;
 use App\Http\Controllers\PesananController;
+use App\Http\Controllers\ManajemenPesananController;
 
 Route::get('/login', [AuthController::class, 'loginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
@@ -48,6 +49,10 @@ Route::middleware('auth')->group(function () {
         Route::post('/keranjang/hapus', [PesananController::class, 'hapusKeranjang'])->name('keranjang.hapus');
         Route::post('/keranjang/checkout', [PesananController::class, 'checkout'])->name('keranjang.checkout');
     });
+
+
+    Route::get('/admin/manajemen-pesanan', [ManajemenPesananController::class, 'index'])->name('manajemen.pesanan.index');
+    Route::post('/admin/manajemen-pesanan/update-status/{id}', [ManajemenPesananController::class, 'updateStatus'])->name('manajemen.pesanan.updateStatus');
 });
 
 Route::prefix('api')->group(function () {

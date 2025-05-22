@@ -125,8 +125,9 @@ class PesananController extends Controller
     public function checkout(Request $request)
     {
         $request->validate([
-            'metode_pembayaran' => 'required|in:cash,midtrans',
+            'metode_pembayaran' => 'required|in:cash,transfer',
         ]);
+
 
         $metode = $request->metode_pembayaran;
         $keranjang = session('keranjang', []);
