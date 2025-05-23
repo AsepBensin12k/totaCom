@@ -11,7 +11,7 @@ class Provinsi extends Model
     use HasFactory;
 
     protected $table = 'provinsis';
-    protected $primaryKey = 'id_provinsi'; // Ubah dari 'id' ke 'id_provinsi'
+    protected $primaryKey = 'id_provinsi';
     public $timestamps = true;
 
     protected $fillable = [
