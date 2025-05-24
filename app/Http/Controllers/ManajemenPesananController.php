@@ -13,7 +13,12 @@ class ManajemenPesananController extends Controller
 {
     public function index()
     {
-        // Debug query untuk melihat apakah data ada
+        $allPesanans = Pesanan::orderBy('tanggal', 'asc')->orderBy('id_pesanan', 'asc')->get();
+        $nomorPesananMap = [];
+        foreach ($allPesanans as $index => $pesanan) {
+            $nomorPesananMap[$pesanan->id_pesanan] = $index + 1;
+        }
+
         $pesanans = Pesanan::with([
             'status',
             'akun',
@@ -23,9 +28,13 @@ class ManajemenPesananController extends Controller
             }
         ])
             ->orderBy('tanggal', 'desc')
+            ->orderBy('id_pesanan', 'desc')
             ->get();
 
-        // Debug: cek apakah relasi produk ter-load
+        foreach ($pesanans as $pesanan) {
+            $pesanan->nomor_pesanan = $nomorPesananMap[$pesanan->id_pesanan];
+        }
+
         foreach ($pesanans as $pesanan) {
             foreach ($pesanan->detailPesanans as $detail) {
                 if (!$detail->produk) {
@@ -61,16 +70,13 @@ class ManajemenPesananController extends Controller
         return redirect()->route('manajemen.pesanan.index')->with('success', 'Status berhasil diubah.');
     }
 
-    // Method untuk debug
     public function debug()
     {
-        // Cek data di detail_pesanans
+
         $details = DB::table('detail_pesanans')->get();
 
-        // Cek data di produks  
         $products = DB::table('produks')->get();
 
-        // Cek join manual
         $joined = DB::table('detail_pesanans')
             ->leftJoin('produks', 'detail_pesanans.id_produk', '=', 'produks.id_produk')
             ->select('detail_pesanans.*', 'produks.nama_produk')
