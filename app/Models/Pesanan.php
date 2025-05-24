@@ -21,24 +21,22 @@ class Pesanan extends Model
     ];
 
 
-    // Relasi dengan Status
     public function status()
     {
         return $this->belongsTo(Status::class, 'id_status', 'id_status');
     }
 
-    // Relasi dengan Metode Pembayaran
     public function metodePembayaran()
     {
         return $this->belongsTo(MetodePembayaran::class, 'id_metode', 'id_metode');
     }
 
-    // Relasi dengan Akun
+
     public function akun()
     {
         return $this->belongsTo(Akun::class, 'id_akun', 'id_akun');
     }
-    // Relasi dengan Detail Pesanan
+
     public function detailPesanans()
     {
         return $this->hasMany(DetailPesanan::class, 'id_pesanan', 'id_pesanan');

@@ -92,6 +92,7 @@
                         <th class="px-4 py-3 border">Kategori</th>
                         <th class="px-4 py-3 border">Stok</th>
                         <th class="px-4 py-3 border">Harga</th>
+                        <th class="px-4 py-3 border">Gambar</th>
                         <th class="px-4 py-3 border">Aksi</th>
                     </tr>
                 </thead>
@@ -103,6 +104,14 @@
                             <td class="border px-4 py-2 text-center">{{ $produk->jenis->nama_jenis ?? '-' }}</td>
                             <td class="border px-4 py-2 text-center">{{ $produk->stok }}</td>
                             <td class="border px-4 py-2 text-right">Rp{{ number_format($produk->harga, 0, ',', '.') }}</td>
+                            <td class="border px-4 py-2 text-center">
+                                @if ($produk->gambar)
+                                    <img src="{{ asset('storage/' . $produk->gambar) }}" alt="Gambar Produk"
+                                        class="w-16 h-16 object-cover mx-auto rounded">
+                                @else
+                                    <span class="text-gray-400 italic">Tidak ada gambar</span>
+                                @endif
+                            </td>
                             <td class="border px-4 py-2 text-center">
                                 <a href="{{ route('stok.edit', $produk->id_produk) }}"
                                     class="bg-blue-500 hover:bg-blue-600 text-white text-sm px-3 py-1 rounded mr-2">Edit</a>

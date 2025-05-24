@@ -22,7 +22,6 @@ class ProfilController extends Controller
 
         $akun->load(['alamat.provinsi', 'alamat.kabupaten', 'alamat.kecamatan']);
 
-        // Filter hanya Jawa Timur berdasarkan struktur database Anda
         $provinsis = Provinsi::where('nama_provinsi', 'LIKE', '%JAWA TIMUR%')
             ->select('id_provinsi', 'nama_provinsi')
             ->get();
@@ -30,12 +29,11 @@ class ProfilController extends Controller
         return view('admin.profile.index', compact('akun', 'provinsis'));
     }
 
-    // Method untuk debug data (hapus setelah selesai debug)
     public function debugData()
     {
         $provinsis = Provinsi::all();
-        $kabupatens = Kabupaten::where('id_provinsi', 15)->get(); // Jawa Timur ID = 15
-        $kecamatans = Kecamatan::where('id_kabupaten', 9)->get(); // Cek kecamatan dengan kabupaten ID 9
+        $kabupatens = Kabupaten::where('id_provinsi', 15)->get();
+        $kecamatans = Kecamatan::where('id_kabupaten', 9)->get();
 
         dd([
             'provinsis' => $provinsis,
@@ -78,14 +76,13 @@ class ProfilController extends Controller
             'detail_alamat.required' => 'Detail alamat harus diisi',
         ]);
 
-        // Validasi tambahan dengan logging untuk debug
         Log::info('Validating address relationships', [
             'provinsi_id' => $request->id_provinsi,
             'kabupaten_id' => $request->id_kabupaten,
             'kecamatan_id' => $request->id_kecamatan
         ]);
 
-        // Cek apakah kabupaten sesuai dengan provinsi
+
         $kabupaten = Kabupaten::where('id_kabupaten', $request->id_kabupaten)
             ->where('id_provinsi', $request->id_provinsi)
             ->first();
@@ -99,7 +96,7 @@ class ProfilController extends Controller
                 ->withInput();
         }
 
-        // Cek apakah kecamatan sesuai dengan kabupaten
+
         $kecamatan = Kecamatan::where('id_kecamatan', $request->id_kecamatan)
             ->where('id_kabupaten', $request->id_kabupaten)
             ->first();
@@ -114,7 +111,6 @@ class ProfilController extends Controller
                 ->withInput();
         }
 
-        // Update data akun
         $akun->nama = $request->nama;
         $akun->username = $request->username;
         $akun->email = $request->email;
@@ -124,7 +120,6 @@ class ProfilController extends Controller
             $akun->password = Hash::make($request->password_baru);
         }
 
-        // Update atau create alamat
         if ($akun->alamat) {
             $akun->alamat->update([
                 'id_provinsi' => $request->id_provinsi,
