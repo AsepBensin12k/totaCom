@@ -1,4 +1,4 @@
-<div class="mb-4 h-6 ">
+<div class="mb-4 h-6">
     <form method="GET" action="{{ url()->current() }}" class="flex items-center space-x-2">
         <input type="text" name="search" placeholder="{{ $placeholder }}" value="{{ request('search') }}"
             class="border border-gray-300 rounded-md px-4 py-2 w-full max-w-md">

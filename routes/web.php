@@ -48,6 +48,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/keranjang/kurang-qty', [PesananController::class, 'kurangQty'])->name('keranjang.kurangQty');
         Route::post('/keranjang/hapus', [PesananController::class, 'hapusKeranjang'])->name('keranjang.hapus');
         Route::post('/keranjang/checkout', [PesananController::class, 'checkout'])->name('keranjang.checkout');
+        Route::get('/pesanan/invoice/{id_pesanan}', [PesananController::class, 'invoice'])->name('pesanan.invoice');
     });
 
 
