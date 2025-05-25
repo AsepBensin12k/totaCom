@@ -5,6 +5,9 @@
 @section('content')
     <div class="container mx-auto px-4 py-4">
         <h1 class="text-xl sm:text-2xl font-bold text-gray-800 mb-4">Data Akun Customer</h1>
+        <div class="mb-10 max-w-md">
+            <x-search-bar placeholder="Cari nama, username, atau email..." />
+        </div>
 
         <div class="w-full overflow-x-auto bg-white rounded-lg shadow">
             <table class="w-full text-sm text-left text-gray-700 divide-y divide-gray-200">
@@ -15,7 +18,6 @@
                         <th scope="col" class="px-4 sm:px-6 py-3">Username</th>
                         <th scope="col" class="px-4 sm:px-6 py-3">Email</th>
                         <th scope="col" class="px-4 sm:px-6 py-3">No HP</th>
-                        {{-- <th scope="col" class="px-4 sm:px-6 py-3">Alamat</th> --}}
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
@@ -26,9 +28,6 @@
                             <td class="px-4 sm:px-6 py-3 whitespace-nowrap">{{ $akun->username }}</td>
                             <td class="px-4 sm:px-6 py-3 whitespace-nowrap">{{ $akun->email }}</td>
                             <td class="px-4 sm:px-6 py-3 whitespace-nowrap">{{ $akun->no_hp }}</td>
-                            {{-- <td class="px-4 sm:px-6 py-3 whitespace-nowrap">
-                                {{ $akun->alamat->detail ?? '-' }}
-                            </td> --}}
                         </tr>
                     @empty
                         <tr>

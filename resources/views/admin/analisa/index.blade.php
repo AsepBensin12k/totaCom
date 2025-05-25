@@ -64,18 +64,18 @@
                     <ul class="py-2 text-sm text-gray-700">
                         <li>
                             <button type="submit" name="filter" value="12bulan"
-                                class="block w-full px-4 py-2 text-left hover:bg-teal-100 rounded transition {{ request('filter') == '12bulan' ? 'font-semibold text-teal-600 bg-teal-50' : '' }}">
+                                class="block w-full px-4 py-2 text-left hover:bg-teal-100 rounded transition {{ request('filter') == '12bulan' || !request('filter') ? 'font-semibold text-teal-600 bg-teal-50' : '' }}">
                                 12 Bulan Terakhir
-                                @if (request('filter') == '12bulan')
+                                @if (request('filter') == '12bulan' || !request('filter'))
                                     <span class="float-right text-teal-600">✓</span>
                                 @endif
                             </button>
                         </li>
                         <li>
                             <button type="submit" name="filter" value="perbulan"
-                                class="block w-full px-4 py-2 text-left hover:bg-teal-100 rounded transition {{ request('filter') == 'perbulan' || !request('filter') ? 'font-semibold text-teal-600 bg-teal-50' : '' }}">
+                                class="block w-full px-4 py-2 text-left hover:bg-teal-100 rounded transition {{ request('filter') == 'perbulan' ? 'font-semibold text-teal-600 bg-teal-50' : '' }}">
                                 1 Bulan Terakhir
-                                @if (request('filter') == 'perbulan' || !request('filter'))
+                                @if (request('filter') == 'perbulan')
                                     <span class="float-right text-teal-600">✓</span>
                                 @endif
                             </button>

@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Produk;
+use App\Models\Pesanan;
+use App\Models\DetailPesanan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class PesananController extends Controller
 {
@@ -29,11 +33,21 @@ class PesananController extends Controller
         return view('admin.pesanan.index', compact('produks'));
     }
 
-
     public function keranjang()
     {
-        $keranjang = session('keranjang', []);
-        return view('admin.pesanan.keranjang', compact('keranjang'));
+        $user = Auth::user();
+        $isAdmin = $user->role === 'admin';
+
+        if ($isAdmin) {
+            // Admin menggunakan session keranjang
+            $keranjang = session('keranjang', []);
+        } else {
+            // Customer menggunakan database keranjang (implementasi sesuai kebutuhan)
+            // Untuk sementara tetap menggunakan session, tapi bisa diubah ke database
+            $keranjang = session('keranjang', []);
+        }
+
+        return view('admin.pesanan.keranjang', compact('keranjang', 'isAdmin'));
     }
 
     public function tambahKeranjang(Request $request, $id_produk)
@@ -41,29 +55,53 @@ class PesananController extends Controller
         $request->validate(['qty' => 'required|integer|min:1']);
 
         $produk = Produk::findOrFail($id_produk);
+        $user = Auth::user();
+        $isAdmin = $user->role === 'admin';
 
-        $keranjang = session('keranjang', []);
+        if ($isAdmin) {
+            // Admin menggunakan session keranjang
+            $keranjang = session('keranjang', []);
 
-        $qtySekarang = $keranjang[$id_produk]['qty'] ?? 0;
-        $qtyBaru = $qtySekarang + $request->qty;
+            $qtySekarang = $keranjang[$id_produk]['qty'] ?? 0;
+            $qtyBaru = $qtySekarang + $request->qty;
 
-        if ($qtyBaru > $produk->stok) {
-            return back()->with('error', 'Jumlah melebihi stok yang tersedia');
+            if ($qtyBaru > $produk->stok) {
+                return back()->with('error', 'Jumlah melebihi stok yang tersedia');
+            }
+
+            $keranjang[$id_produk] = [
+                'id_produk' => $id_produk,
+                'nama_produk' => $produk->nama_produk,
+                'harga' => $produk->harga,
+                'qty' => $qtyBaru,
+            ];
+
+            session(['keranjang' => $keranjang]);
+        } else {
+            // Customer bisa menggunakan database atau session persistent
+            // Untuk implementasi database, buat model Keranjang dan simpan ke database
+            $keranjang = session('keranjang', []);
+
+            $qtySekarang = $keranjang[$id_produk]['qty'] ?? 0;
+            $qtyBaru = $qtySekarang + $request->qty;
+
+            if ($qtyBaru > $produk->stok) {
+                return back()->with('error', 'Jumlah melebihi stok yang tersedia');
+            }
+
+            $keranjang[$id_produk] = [
+                'id_produk' => $id_produk,
+                'nama_produk' => $produk->nama_produk,
+                'harga' => $produk->harga,
+                'qty' => $qtyBaru,
+            ];
+
+            session(['keranjang' => $keranjang]);
         }
-
-        $keranjang[$id_produk] = [
-            'id_produk' => $id_produk,
-            'nama_produk' => $produk->nama_produk,
-            'harga' => $produk->harga,
-            'qty' => $qtyBaru,
-        ];
-
-        session(['keranjang' => $keranjang]);
 
         return back()->with('success', 'Produk berhasil ditambahkan ke keranjang');
     }
 
-    // Tambahkan method untuk increment dan decrement langsung
     public function tambahQty(Request $request)
     {
         $request->validate(['id_produk' => 'required|exists:produks,id_produk']);
@@ -128,19 +166,96 @@ class PesananController extends Controller
             'metode_pembayaran' => 'required|in:cash,transfer',
         ]);
 
-
-        $metode = $request->metode_pembayaran;
         $keranjang = session('keranjang', []);
 
         if (empty($keranjang)) {
-            return back()->with('error', 'Keranjang kosong.');
+            return redirect()->route('keranjang.index')->with('error', 'Keranjang kosong');
         }
 
-        // TODO: Implementasi pembayaran dan simpan pesanan ke DB sesuai metode pembayaran
-        // Untuk sekarang, hanya hapus keranjang dan kasih flash message
+        $user = Auth::user();
+        $isAdmin = $user->id_role === 1;
 
-        session()->forget('keranjang');
+        DB::beginTransaction();
 
-        return back()->with('success', "Checkout berhasil dengan metode pembayaran: $metode");
+        try {
+            $total = 0;
+            foreach ($keranjang as $item) {
+                $total += $item['qty'] * $item['harga'];
+            }
+
+            $pesanan = Pesanan::create([
+                'id_akun' => $user->id_akun,
+                'tanggal' => now(),
+                'total' => $total,
+                'id_metode' => $this->getMetodePembayaranId($request->metode_pembayaran),
+                'id_status' => $isAdmin ? 3 : 1,
+            ]);
+
+            // Simpan detail pesanan dan update stok
+            foreach ($keranjang as $item) {
+                // Ambil produk untuk update stok
+                $produk = Produk::findOrFail($item['id_produk']);
+
+                // Cek stok tersedia
+                if ($produk->stok < $item['qty']) {
+                    throw new \Exception("Stok produk {$produk->nama_produk} tidak mencukupi");
+                }
+
+                // Buat detail pesanan
+                DetailPesanan::create([
+                    'id_pesanan' => $pesanan->id_pesanan,
+                    'id_produk' => $item['id_produk'],
+                    'qty' => $item['qty'],
+                    'harga' => $item['harga'],
+                    'subtotal' => $item['qty'] * $item['harga'],
+                ]);
+
+                // Update stok produk
+                $produk->decrement('stok', $item['qty']);
+            }
+
+            // Hapus keranjang dari session
+            session()->forget('keranjang');
+
+            DB::commit();
+
+            // Redirect ke invoice
+            if ($isAdmin) {
+                return redirect()->route('pesanan.invoice', $pesanan->id_pesanan)
+                    ->with('success', 'Pesanan berhasil diselesaikan');
+            } else {
+                return redirect()->route('pesanan.invoice', $pesanan->id_pesanan)
+                    ->with('success', 'Pesanan berhasil dibuat dan menunggu konfirmasi');
+            }
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->route('keranjang.index')
+                ->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Helper method untuk mendapatkan ID metode pembayaran
+     */
+    private function getMetodePembayaranId($metode)
+    {
+        $metodePembayaran = [
+            'transfer' => 1,
+            'cash' => 2,
+        ];
+
+        return $metodePembayaran[$metode] ?? 1;
+    }
+
+    public function invoice($id_pesanan)
+    {
+        $pesanan = Pesanan::with([
+            'detailPesanans.produk',
+            'akun',
+            'status',
+            'metodePembayaran'
+        ])->findOrFail($id_pesanan);
+
+        return view('admin.pesanan.invoice', compact('pesanan'));
     }
 }
