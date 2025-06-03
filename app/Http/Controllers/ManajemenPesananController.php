@@ -20,7 +20,6 @@ class ManajemenPesananController extends Controller
             $nomorPesananMap[$pesanan->id_pesanan] = $index + 1;
         }
 
-        // Query builder untuk pesanan dengan filter
         $query = Pesanan::with([
             'status',
             'akun',

@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Api\KabupatenController;
 use App\Http\Controllers\Api\KecamatanController;
 use App\Http\Controllers\Api\ProvinsiController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\StokController;
 use App\Http\Controllers\AnalisaProdukController;
 use App\Http\Controllers\DataAkunController;
@@ -23,9 +24,7 @@ Route::get('/', function () {
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('/dashboard', function () {
-        return view('admin.dashboard.dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::get('/user/dashboard', function () {
         return view('user.dashboard.dashboard');
