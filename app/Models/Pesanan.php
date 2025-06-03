@@ -17,7 +17,8 @@ class Pesanan extends Model
         'tanggal',
         'id_status',
         'id_metode',
-        'id_akun'
+        'id_akun',
+        'bukti_pembayaran',
     ];
 
 

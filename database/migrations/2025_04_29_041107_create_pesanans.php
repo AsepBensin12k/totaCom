@@ -14,6 +14,7 @@ return new class extends Migration
             $table->unsignedBigInteger('id_akun');
             $table->unsignedBigInteger('id_status');
             $table->unsignedBigInteger('id_metode');
+            $table->string('bukti_pembayaran')->nullable();
 
             $table->foreign('id_akun')->references('id_akun')->on('akuns')->onDelete('cascade');
             $table->foreign('id_status')->references('id_status')->on('statuses')->onDelete('cascade');
