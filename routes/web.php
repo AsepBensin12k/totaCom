@@ -28,6 +28,9 @@ Route::get('/', function () {
 // admin
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/user/dashboard', function () {
+        return view('user.dashboard.dashboard');
+    })->name('user.dashboard');
 
     Route::get('/analisa', [AnalisaProdukController::class, 'index'])->name('analisa.index');
     Route::get('/analisa/grafik', [AnalisaProdukController::class, 'grafik'])->name('analisa.grafik');
