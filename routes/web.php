@@ -5,12 +5,16 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Api\KabupatenController;
 use App\Http\Controllers\Api\KecamatanController;
 use App\Http\Controllers\Api\ProvinsiController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\StokController;
 use App\Http\Controllers\AnalisaProdukController;
 use App\Http\Controllers\DataAkunController;
 use App\Http\Controllers\ProfilController;
 use App\Http\Controllers\PesananController;
 use App\Http\Controllers\ManajemenPesananController;
+use App\Http\Controllers\UserStokController;
+use App\Http\Controllers\UserPesananController;
+use App\Http\Controllers\RiwayatUserController;
 
 Route::get('/login', [AuthController::class, 'loginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
@@ -21,15 +25,9 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/', function () {
     return redirect()->route('login');
 });
-
+// admin
 Route::middleware('auth')->group(function () {
-    Route::get('/dashboard', function () {
-        return view('admin.dashboard.dashboard');
-    })->name('dashboard');
-
-    Route::get('/user/dashboard', function () {
-        return view('user.dashboard.dashboard');
-    })->name('user.dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::get('/analisa', [AnalisaProdukController::class, 'index'])->name('analisa.index');
     Route::get('/analisa/grafik', [AnalisaProdukController::class, 'grafik'])->name('analisa.grafik');
@@ -49,11 +47,39 @@ Route::middleware('auth')->group(function () {
         Route::post('/keranjang/hapus', [PesananController::class, 'hapusKeranjang'])->name('keranjang.hapus');
         Route::post('/keranjang/checkout', [PesananController::class, 'checkout'])->name('keranjang.checkout');
         Route::get('/pesanan/invoice/{id_pesanan}', [PesananController::class, 'invoice'])->name('pesanan.invoice');
+
     });
 
 
     Route::get('/admin/manajemen-pesanan', [ManajemenPesananController::class, 'index'])->name('manajemen.pesanan.index');
     Route::post('/admin/manajemen-pesanan/update-status/{id}', [ManajemenPesananController::class, 'updateStatus'])->name('manajemen.pesanan.updateStatus');
+
+
+//user(customer)
+    Route::get('/user/dashboard', function () {
+        return view('user.dashboard.dashboarduser');
+    })->name('user.dashboard');
+
+    Route::get('/produk', [UserStokController::class, 'index'])->name('user.produk.index');
+
+Route::prefix('user/pesanan')->group(function () {
+    Route::get('/buat', [UserPesananController::class, 'pesananIndex'])->name('pesanan.buat');
+    Route::get('/keranjang', [UserPesananController::class, 'pesananKeranjang'])->name('pesanan.keranjang');
+    Route::post('/tambah-keranjang/{id_produk}', [UserPesananController::class, 'tambahKeranjang'])->name('user.pesanan.tambahKeranjang');
+    Route::post('/tambah-qty', [UserPesananController::class, 'tambahQty'])->name('pesanan.tambahQty');
+    Route::post('/kurang-qty', [UserPesananController::class, 'kurangQty'])->name('pesanan.kurangQty');
+    Route::post('/hapus-keranjang', [UserPesananController::class, 'hapusKeranjang'])->name('pesanan.hapusKeranjang');
+    Route::post('/hapus-produk-terpilih', [UserPesananController::class, 'hapusMultiple'])->name('pesanan.hapusMultiple');
+    // checkout
+    Route::post('/checkout', [UserPesananController::class, 'checkoutForm'])->name('user.pesanan.checkout');
+    Route::post('/checkout/simpan', [UserPesananController::class, 'checkout'])->name('user.pesanan.checkout.simpan');
+
+    Route::get('/invoice/{id_pesanan}', [UserPesananController::class, 'invoice'])->name('user.pesanan.invoice');
+    Route::get('/riwayat', [UserPesananController::class, 'riwayat'])->name('temp.pesanan.riwayat');
+     Route::get('/riwayat-pesanan', [RiwayatUserController::class, 'index'])->name('pesanan.riwayat');
+     Route::post('/pesanan/{id}/selesai', [RiwayatUserController::class, 'updateStatus'])->name('pesanan.selesai')->middleware('auth');
+});
+
 });
 
 Route::prefix('api')->group(function () {

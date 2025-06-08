@@ -4,7 +4,6 @@
 
 @section('content')
     <div class="container mx-auto px-4 py-6">
-        <h1 class="text-2xl font-bold mb-6 text-gray-800">Manajemen Pesanan</h1>
 
         {{-- Notifikasi sukses --}}
         @if (session('success'))
@@ -27,7 +26,6 @@
             </script>
         @endif
 
-        {{-- Notifikasi error --}}
         @if (session('error'))
             <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded mb-6">
                 {{ session('error') }}
@@ -39,7 +37,6 @@
             <form method="GET" action="{{ route('manajemen.pesanan.index') }}" id="filterForm">
                 <div class="flex flex-col lg:flex-row lg:justify-between gap-4">
 
-                    {{-- Kolom Kiri: Search dan Tombol Cari --}}
                     <div class="flex flex-col sm:flex-row items-stretch gap-2 w-full lg:max-w-md">
                         <input type="text" name="search" placeholder="Cari nomor pesanan atau nama pemesan..."
                             value="{{ request('search') }}" class="border border-gray-300 rounded-md px-4 py-2 w-full" />
@@ -49,10 +46,8 @@
                         </button>
                     </div>
 
-                    {{-- Kolom Kanan: Semua Filter dan Tombol --}}
                     <div class="flex flex-col sm:flex-row flex-wrap gap-4 w-full justify-end">
 
-                        {{-- Filter Status --}}
                         <div class="relative w-full sm:w-auto">
                             <button type="button" id="statusFilterBtn"
                                 class="flex items-center justify-between px-4 py-2 w-full sm:w-[140px] border border-gray-300 rounded-md bg-white hover:bg-gray-50 focus:ring-2 focus:ring-teal-500 focus:border-teal-500">
@@ -243,6 +238,7 @@
                         <th class="px-4 py-3 border">Akun</th>
                         <th class="px-4 py-3 border">Metode</th>
                         <th class="px-4 py-3 border">Status</th>
+                        <th class="px-4 py-3 border">Bukti Pembayaran</th>
                         <th class="px-4 py-3 border">Aksi</th>
                     </tr>
                 </thead>
@@ -260,6 +256,7 @@
                             <td class="border px-4 py-2 text-center">{{ $pesanan->akun->username ?? '-' }}</td>
                             <td class="border px-4 py-2 text-center">{{ $pesanan->metodePembayaran->nama_metode ?? '-' }}
                             </td>
+
                             <td class="border px-4 py-2 text-center">
                                 <span
                                     class="px-2 py-1 rounded text-sm font-semibold
@@ -271,6 +268,14 @@
                                 </span>
                             </td>
                             <td class="border px-4 py-2 text-center">
+                                @if ($pesanan->bukti_pembayaran)
+                                    <a href="{{ asset('storage/' . $pesanan->bukti_pembayaran) }}" target="_blank"
+                                        class="text-blue-600 hover:underline">Lihat Bukti</a>
+                                @else
+                                    <span class="text-red-500">Belum ada bukti</span>
+                                @endif
+                            </td>
+                            <td class="border px-4 py-2 text-center">
                                 <button onclick="toggleDetail({{ $pesanan->id_pesanan }})"
                                     class="bg-indigo-500 hover:bg-indigo-600 text-white text-sm px-4 py-2 rounded transition duration-200">
                                     Lihat Detail
@@ -280,7 +285,7 @@
 
                         {{-- Detail Pesanan --}}
                         <tr id="detail-{{ $pesanan->id_pesanan }}" class="hidden bg-gray-50">
-                            <td colspan="7" class="p-4">
+                            <td colspan="8" class="p-4">
                                 <div class="mb-4">
                                     <h3 class="font-semibold text-gray-800 text-lg">
                                         Detail Pesanan #PSN{{ str_pad($pesanan->nomor_pesanan, 4, '0', STR_PAD_LEFT) }}
