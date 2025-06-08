@@ -13,25 +13,25 @@ class StokController extends Controller
     public function index(Request $request)
     {
         $query = Produk::with('jenis');
-    
+
         if ($request->has('search') && $request->search != '') {
             $search = $request->search;
-    
+
             $query->where('nama_produk', 'like', "%{$search}%")
                 ->orWhereHas('jenis', function ($q) use ($search) {
                     $q->where('nama_jenis', 'like', "%{$search}%");
                 });
         }
-    
+
         if ($request->has('filter_jenis') && $request->filter_jenis != '') {
             $query->where('id_jenis', $request->filter_jenis);
         }
-    
+
         $produks = $query->get();
-    
+
         return view('admin.stok.index', compact('produks'));
     }
-    
+
 
     public function create()
     {
