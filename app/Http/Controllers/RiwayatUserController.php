@@ -14,7 +14,7 @@ class RiwayatUserController extends Controller
 
         $pesanans = Pesanan::with(['status', 'metodePembayaran', 'detailPesanans.produk'])
             ->where('id_akun', $userId)
-            ->orderBy('tanggal', 'desc')
+            ->orderBy('created_at', 'desc')
             ->get();
 
         foreach ($pesanans as $index => $pesanan) {
