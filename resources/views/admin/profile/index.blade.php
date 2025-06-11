@@ -92,7 +92,7 @@
                 </button>
             </div>
 
-            <form action="{{ route('profile.update') }}" method="POST" class="mt-4">
+            <form action="{{ route('admin.profile.update') }}" method="POST" class="mt-4">
                 @csrf
                 @method('PUT')
 

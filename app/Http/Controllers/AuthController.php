@@ -30,18 +30,33 @@ class AuthController extends Controller
 
         $fieldType = filter_var($credentials['login'], FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
 
-        if (Auth::attempt([$fieldType => $credentials['login'], 'password' => $credentials['password']])) {
+        // Attempt login with 'web' guard first
+        if (Auth::guard('web')->attempt([$fieldType => $credentials['login'], 'password' => $credentials['password']])) {
             $request->session()->regenerate();
 
-            $user = Auth::user();
+            $user = Auth::guard('web')->user();
 
             if (!$user->role) {
-                Auth::logout();
+                Auth::guard('web')->logout();
                 return redirect('/login')->withErrors([
                     'login' => 'Akun Anda tidak memiliki role yang valid.'
                 ]);
             }
 
+            if ($user->role->role === 'admin') {
+                // Logout from 'web' guard and login with 'admin' guard
+                Auth::guard('web')->logout();
+                if (Auth::guard('admin')->attempt([$fieldType => $credentials['login'], 'password' => $credentials['password']])) {
+                    $request->session()->regenerate();
+                    return redirect()->route('dashboard');
+                } else {
+                    return redirect('/login')->withErrors([
+                        'login' => 'Gagal login sebagai admin.'
+                    ]);
+                }
+            }
+
+            // For customer role, stay logged in with 'web' guard
             return $this->redirectToDashboard();
         }
 

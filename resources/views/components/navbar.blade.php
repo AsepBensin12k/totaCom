@@ -10,7 +10,10 @@
     </div>
     {{-- <div class="text-sm text-gray-600 hidden md:block">Halo, <span
             class="font-medium">{{ Auth::user()->nama ?? 'Admin' }}</span></div> --}}
-    <a href="{{ route('profile.index') }}" class="flex items-center px-6 py-4 space-x-3 border-b border-gray-200">
+    @php
+        $routeName = Auth::user()->id_role == 1 ? 'admin.profile.index' : 'user.profile.index';
+    @endphp
+    <a href="{{ route($routeName) }}" class="flex items-center px-6 py-4 space-x-3 border-b border-gray-200">
         <img src="{{ asset('storage/logo/logo.png') }}" alt="Logo" class="h-10 w-auto">
     </a>
 </header>

@@ -10,9 +10,8 @@ use App\Models\Kecamatan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log;
 
-class ProfilController extends Controller
+class CustomerProfilController extends Controller
 {
     public function index()
     {
@@ -24,12 +23,7 @@ class ProfilController extends Controller
             ->select('id_provinsi', 'nama_provinsi')
             ->get();
 
-        // Menampilkan view berdasarkan peran pengguna
-        if ($akun->id_role == 1) {
-            return view('admin.profile.index', compact('akun', 'provinsis'));
-        } else {
-            return view('user.profile.index', compact('akun', 'provinsis'));
-        }
+        return view('user.profile.index', compact('akun', 'provinsis'));
     }
 
     public function update(Request $request)
@@ -103,7 +97,7 @@ class ProfilController extends Controller
                 'id_provinsi' => $request->id_provinsi,
                 'id_kabupaten' => $request->id_kabupaten,
                 'id_kecamatan' => $request->id_kecamatan,
-                'detail_alamat' => $request->detail_alamat,
+                'detail_alamat' => $request->detail_alamat
             ]);
 
             $akun->id_alamat = $alamat->id_alamat;
@@ -111,22 +105,7 @@ class ProfilController extends Controller
 
         $akun->save();
 
-        // Redirect sesuai role
-        return redirect()->route('profile.index')
+        return redirect()->route('user.profile.index')
             ->with('success', 'Profil berhasil diperbarui');
-    }
-
-    public function debugData()
-    {
-        $provinsis = Provinsi::all();
-        $kabupatens = Kabupaten::where('id_provinsi', 15)->get();
-        $kecamatans = Kecamatan::where('id_kabupaten', 9)->get();
-
-        dd([
-            'provinsis' => $provinsis,
-            'kabupatens' => $kabupatens,
-            'kecamatans' => $kecamatans,
-            'kabupaten_id_9_exists' => Kabupaten::find(9),
-        ]);
     }
 }

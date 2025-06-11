@@ -9,7 +9,8 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\StokController;
 use App\Http\Controllers\AnalisaProdukController;
 use App\Http\Controllers\DataAkunController;
-use App\Http\Controllers\ProfilController;
+use App\Http\Controllers\AdminProfilController;
+use App\Http\Controllers\CustomerProfilController;
 use App\Http\Controllers\PesananController;
 use App\Http\Controllers\ManajemenPesananController;
 use App\Http\Controllers\UserStokController;
@@ -25,71 +26,70 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/', function () {
     return redirect()->route('login');
 });
-// admin
-Route::middleware('auth')->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::get('/user/dashboard', function () {
-        return view('user.dashboard.dashboard');
-    })->name('user.dashboard');
 
-    Route::get('/analisa', [AnalisaProdukController::class, 'index'])->name('analisa.index');
-    Route::get('/analisa/grafik', [AnalisaProdukController::class, 'grafik'])->name('analisa.grafik');
+// ADMIN ROUTES - Terpisah dengan middleware admin
+Route::middleware(['auth:admin'])->group(function () {
+    Route::prefix('admin')->group(function () {
 
-    Route::get('/data-akun', [DataAkunController::class, 'index'])->name('data_akun.index');
+        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    Route::get('/profile', [ProfilController::class, 'index'])->name('profile.index');
-    Route::put('/profile', [ProfilController::class, 'update'])->name('profile.update');
+        Route::get('/profile', [AdminProfilController::class, 'index'])->name('admin.profile.index');
+        Route::put('/profile', [AdminProfilController::class, 'update'])->name('admin.profile.update');
 
+        Route::get('/analisa', [AnalisaProdukController::class, 'index'])->name('analisa.index');
+        Route::get('/analisa/grafik', [AnalisaProdukController::class, 'grafik'])->name('analisa.grafik');
 
-    Route::prefix('admin/pesanan')->group(function () {
-        Route::get('/produk', [PesananController::class, 'index'])->name('pesanan.index');
-        Route::post('/produk/tambah/{id_produk}', [PesananController::class, 'tambahKeranjang'])->name('pesanan.tambahKeranjang');
-        Route::get('/keranjang', [PesananController::class, 'keranjang'])->name('keranjang.index');
-        Route::post('/keranjang/tambah-qty', [PesananController::class, 'tambahQty'])->name('keranjang.tambahQty');
-        Route::post('/keranjang/kurang-qty', [PesananController::class, 'kurangQty'])->name('keranjang.kurangQty');
-        Route::post('/keranjang/hapus', [PesananController::class, 'hapusKeranjang'])->name('keranjang.hapus');
-        Route::post('/keranjang/checkout', [PesananController::class, 'checkout'])->name('keranjang.checkout');
+        Route::get('/data-akun', [DataAkunController::class, 'index'])->name('data_akun.index');
+
+        Route::resource('stok', StokController::class);
+
+        Route::get('/pesanan/produk', [PesananController::class, 'index'])->name('pesanan.index');
+        Route::post('/pesanan/produk/tambah/{id_produk}', [PesananController::class, 'tambahKeranjang'])->name('pesanan.tambahKeranjang');
+        Route::get('/pesanan/keranjang', [PesananController::class, 'keranjang'])->name('keranjang.index');
+        Route::post('/pesanan/keranjang/tambah-qty', [PesananController::class, 'tambahQty'])->name('keranjang.tambahQty');
+        Route::post('/pesanan/keranjang/kurang-qty', [PesananController::class, 'kurangQty'])->name('keranjang.kurangQty');
+        Route::post('/pesanan/keranjang/hapus', [PesananController::class, 'hapusKeranjang'])->name('keranjang.hapus');
+        Route::post('/pesanan/keranjang/checkout', [PesananController::class, 'checkout'])->name('keranjang.checkout');
         Route::get('/pesanan/invoice/{id_pesanan}', [PesananController::class, 'invoice'])->name('pesanan.invoice');
 
+        Route::get('/manajemen-pesanan', [ManajemenPesananController::class, 'index'])->name('manajemen.pesanan.index');
+        Route::post('/manajemen-pesanan/update-status/{id}', [ManajemenPesananController::class, 'updateStatus'])->name('manajemen.pesanan.updateStatus');
     });
+});
 
-
-    Route::get('/admin/manajemen-pesanan', [ManajemenPesananController::class, 'index'])->name('manajemen.pesanan.index');
-    Route::post('/admin/manajemen-pesanan/update-status/{id}', [ManajemenPesananController::class, 'updateStatus'])->name('manajemen.pesanan.updateStatus');
-
-
-//user(customer)
-    Route::get('/user/dashboard', function () {
-        return view('user.dashboard.dashboarduser');
+// USER/CUSTOMER ROUTES - Terpisah dengan middleware customer
+Route::prefix('user')->middleware(['auth:web'])->group(function () {
+    Route::get('/dashboard', function () {
+        return view('user.dashboard.index');
     })->name('user.dashboard');
+
+    Route::get('/profil', [CustomerProfilController::class, 'index'])->name('user.profile.index');
+    Route::put('/profil', [CustomerProfilController::class, 'update'])->name('user.profile.update');
 
     Route::get('/produk', [UserStokController::class, 'index'])->name('user.produk.index');
 
-Route::prefix('user/pesanan')->group(function () {
-    Route::get('/buat', [UserPesananController::class, 'pesananIndex'])->name('pesanan.buat');
-    Route::get('/keranjang', [UserPesananController::class, 'pesananKeranjang'])->name('pesanan.keranjang');
-    Route::post('/tambah-keranjang/{id_produk}', [UserPesananController::class, 'tambahKeranjang'])->name('user.pesanan.tambahKeranjang');
-    Route::post('/tambah-qty', [UserPesananController::class, 'tambahQty'])->name('pesanan.tambahQty');
-    Route::post('/kurang-qty', [UserPesananController::class, 'kurangQty'])->name('pesanan.kurangQty');
-    Route::post('/hapus-keranjang', [UserPesananController::class, 'hapusKeranjang'])->name('pesanan.hapusKeranjang');
-    Route::post('/hapus-produk-terpilih', [UserPesananController::class, 'hapusMultiple'])->name('pesanan.hapusMultiple');
+    Route::get('/pesanan/buat', [UserPesananController::class, 'pesananIndex'])->name('pesanan.buat');
+    Route::get('/pesanan/keranjang', [UserPesananController::class, 'pesananKeranjang'])->name('pesanan.keranjang');
+    Route::post('/pesanan/tambah-keranjang/{id_produk}', [UserPesananController::class, 'tambahKeranjang'])->name('user.pesanan.tambahKeranjang');
+    Route::post('/pesanan/tambah-qty', [UserPesananController::class, 'tambahQty'])->name('pesanan.tambahQty');
+    Route::post('/pesanan/kurang-qty', [UserPesananController::class, 'kurangQty'])->name('pesanan.kurangQty');
+    Route::post('/pesanan/hapus-keranjang', [UserPesananController::class, 'hapusKeranjang'])->name('pesanan.hapusKeranjang');
+    Route::post('/pesanan/hapus-produk-terpilih', [UserPesananController::class, 'hapusMultiple'])->name('pesanan.hapusMultiple');
+
     // checkout
-    Route::post('/checkout', [UserPesananController::class, 'checkoutForm'])->name('user.pesanan.checkout');
-    Route::post('/checkout/simpan', [UserPesananController::class, 'checkout'])->name('user.pesanan.checkout.simpan');
+    Route::post('/pesanan/checkout', [UserPesananController::class, 'checkoutForm'])->name('user.pesanan.checkout');
+    Route::post('/pesanan/checkout/simpan', [UserPesananController::class, 'checkout'])->name('user.pesanan.checkout.simpan');
 
-    Route::get('/invoice/{id_pesanan}', [UserPesananController::class, 'invoice'])->name('user.pesanan.invoice');
-    Route::get('/riwayat', [UserPesananController::class, 'riwayat'])->name('temp.pesanan.riwayat');
-     Route::get('/riwayat-pesanan', [RiwayatUserController::class, 'index'])->name('pesanan.riwayat');
-     Route::post('/pesanan/{id}/selesai', [RiwayatUserController::class, 'updateStatus'])->name('pesanan.selesai')->middleware('auth');
+    Route::get('/pesanan/invoice/{id_pesanan}', [UserPesananController::class, 'invoice'])->name('user.pesanan.invoice');
+    Route::get('/pesanan/riwayat', [UserPesananController::class, 'riwayat'])->name('temp.pesanan.riwayat');
+    Route::get('/pesanan/riwayat-pesanan', [RiwayatUserController::class, 'index'])->name('pesanan.riwayat');
+    Route::post('/pesanan/{id}/selesai', [RiwayatUserController::class, 'updateStatus'])->name('pesanan.selesai');
 });
 
-});
-
+// API ROUTES
 Route::prefix('api')->group(function () {
     Route::get('/provinsi', [ProvinsiController::class, 'getAllProvinsi']);
     Route::get('/kabupaten/{provinsiId}', [KabupatenController::class, 'getKabupatenByProvinsi']);
     Route::get('/kecamatan/{kabupatenId}', [KecamatanController::class, 'getKecamatanByKabupaten']);
     Route::get('/kecamatan', [KecamatanController::class, 'index']);
 });
-
-Route::resource('stok', StokController::class);

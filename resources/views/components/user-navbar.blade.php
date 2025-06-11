@@ -13,8 +13,10 @@
                 <a href="{{ route('user.dashboard') }}" class="text-gray-700 hover:text-green-600 font-medium">
                     Dashboard
                 </a>
-
-                <a href="{{ route('profile.index') }}" class="text-gray-700 hover:text-green-600 font-medium">
+                @php
+                    $routeName = Auth::user()->id_role == 1 ? 'admin.profile.index' : 'user.profile.index';
+                @endphp
+                <a href="{{ route($routeName) }}" class="text-gray-700 hover:text-green-600 font-medium">
                     Profil
                 </a>
 
@@ -32,10 +34,12 @@
                     <div x-show="open" @mouseover="open = true" @mouseleave="open = false"
                         class="absolute left-0 mt-2 w-48 bg-white border border-gray-200 shadow-lg rounded-md z-50"
                         x-transition>
-                        <a href="{{ route('pesanan.buat') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                        <a href="{{ route('pesanan.buat') }}"
+                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                             Buat Pesanan
                         </a>
-                        <a href="{{ route('pesanan.riwayat') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                        <a href="{{ route('pesanan.riwayat') }}"
+                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                             Riwayat Pesanan
                         </a>
                     </div>

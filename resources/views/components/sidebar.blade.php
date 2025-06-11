@@ -34,8 +34,10 @@
             class="block px-4 py-2 rounded-lg {{ request()->routeIs('data_akun.index') ? 'bg-teal-600 text-white font-semibold' : 'hover:bg-teal-100' }}">
             Data Akun
         </a>
-
-        <a href="{{ route('profile.index') }}"
+        @php
+            $routeName = Auth::user()->id_role == 1 ? 'admin.profile.index' : 'user.profile.index';
+        @endphp
+        <a href="{{ route($routeName) }}"
             class="block px-4 py-2 rounded-lg {{ request()->routeIs('profil.index') ? 'bg-teal-600 text-white font-semibold' : 'hover:bg-teal-100' }}">
             Profile</a>
     </nav>
