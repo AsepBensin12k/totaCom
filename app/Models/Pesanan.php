@@ -11,7 +11,7 @@ class Pesanan extends Model
 
     protected $table = 'pesanans';
     protected $primaryKey = 'id_pesanan';
-    public $timestamps = false;
+    public $timestamps = true;
 
     protected $fillable = [
         'tanggal',

@@ -45,7 +45,7 @@
                 <select name="metode_pembayaran" id="metode_pembayaran" class="w-full border p-2 rounded" required>
                     <option value="">-- Pilih Metode --</option>
                     <option value="transfer">Transfer</option>
-                    <option value="cash">Cash</option>
+                    <option value="cash" hidden>Cash</option>
                 </select>
             </div>
 
@@ -60,7 +60,7 @@
 
             <div id="bukti-section" class="hidden mb-4">
                 <label for="bukti_pembayaran" class="block mb-2 font-medium">Upload Bukti Pembayaran:</label>
-                <input type="file" name="bukti_pembayaran" class="w-full border p-2 rounded" accept="image/*">
+                <input type="file" name="bukti_pembayaran" id="bukti_pembayaran" class="w-full border p-2 rounded" accept="image/*">
                 <p class="text-sm text-gray-500 mt-1">Format: JPG/PNG, maksimal 2MB</p>
             </div>
 
@@ -80,12 +80,16 @@
     const buktiSection = document.getElementById('bukti-section');
 
     metodeSelect.addEventListener('change', function () {
+        const buktiInput = document.getElementById('bukti_pembayaran');
+
         if (this.value === 'transfer') {
             bankInfo.classList.remove('hidden');
             buktiSection.classList.remove('hidden');
+            buktiInput.setAttribute('required', 'required');
         } else {
             bankInfo.classList.add('hidden');
             buktiSection.classList.add('hidden');
+            buktiInput.removeAttribute('required');
         }
     });
 </script>

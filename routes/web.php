@@ -16,6 +16,7 @@ use App\Http\Controllers\ManajemenPesananController;
 use App\Http\Controllers\UserStokController;
 use App\Http\Controllers\UserPesananController;
 use App\Http\Controllers\RiwayatUserController;
+use App\Http\Controllers\UserDashboardController;
 
 Route::get('/login', [AuthController::class, 'loginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
@@ -58,10 +59,11 @@ Route::middleware(['auth:admin'])->group(function () {
 });
 
 // USER/CUSTOMER ROUTES - Terpisah dengan middleware customer
+// USER/CUSTOMER ROUTES - Terpisah dengan middleware customer
 Route::prefix('user')->middleware(['auth:web'])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('user.dashboard.index');
-    })->name('user.dashboard');
+    // --- GANTI RUTE INI ---
+    Route::get('/dashboard', [UserDashboardController::class, 'index'])->name('user.dashboard');
+    // -----------------------
 
     Route::get('/profil', [CustomerProfilController::class, 'index'])->name('user.profile.index');
     Route::put('/profil', [CustomerProfilController::class, 'update'])->name('user.profile.update');
@@ -81,7 +83,7 @@ Route::prefix('user')->middleware(['auth:web'])->group(function () {
     Route::post('/pesanan/checkout/simpan', [UserPesananController::class, 'checkout'])->name('user.pesanan.checkout.simpan');
 
     Route::get('/pesanan/invoice/{id_pesanan}', [UserPesananController::class, 'invoice'])->name('user.pesanan.invoice');
-    Route::get('/pesanan/riwayat', [UserPesananController::class, 'riwayat'])->name('temp.pesanan.riwayat');
+    Route::get('/pesanan/riwayat', [UserPesananController::class, 'riwayat'])->name('temp.pesanan.riwayat'); // Ini masih ada temp, perlu dikonfirmasi
     Route::get('/pesanan/riwayat-pesanan', [RiwayatUserController::class, 'index'])->name('pesanan.riwayat');
     Route::post('/pesanan/{id}/selesai', [RiwayatUserController::class, 'updateStatus'])->name('pesanan.selesai');
 });
