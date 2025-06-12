@@ -9,7 +9,7 @@
     @else
         @foreach($pesanans as $pesanan)
             <div class="bg-white border rounded shadow p-4 flex flex-col mb-6">
-<h2 class="font-semibold text-lg mb-2">Pesanan {{ $pesanans->count() - $loop->index }}</h2>
+            <h2 class="font-semibold text-lg mb-2">Pesanan {{ $pesanans->count() - $loop->index }}</h2>
                 <p><strong>Tanggal:</strong> {{ \Carbon\Carbon::parse($pesanan->tanggal)->format('d M Y') }}</p>
                 <p><strong>Status:</strong> {{ $pesanan->status->nama_status }}</p>
                 <p><strong>Metode Pembayaran:</strong> {{ $pesanan->metodePembayaran->nama_metode ?? '-' }}</p>
