@@ -7,8 +7,8 @@
         <div class="container mx-auto px-4 py-4">
             <!-- Header -->
             <div class="mb-8 animate-fade-in">
-                <h1 class="text-4xl font-bold text-gray-800 mb-2">Dashboard Admin</h1>
-                <p class="text-gray-600">Selamat datang kembali! Berikut adalah ringkasan bisnis Anda hari ini.</p>
+                <h1 class="text-4xl font-bold text-gray-800 mb-2">Halo, {{ Auth::user()->nama }}!</h1>
+                <p class="text-gray-600">Selamat datang kembali! Berikut adalah ringkasan bisnis Anda</p>
             </div>
 
             <!-- Quick Stats Cards -->

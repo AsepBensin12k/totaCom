@@ -88,12 +88,12 @@
             </button>
         </div>
 
-        <!-- Forgot Password Link -->
+        {{-- <!-- Forgot Password Link -->
         <div class="text-center">
             <a href="#" class="text-sm text-teal-600 hover:text-teal-800 transition-colors duration-200 font-medium">
                 Lupa password?
             </a>
-        </div>
+        </div> --}}
     </form>
 @endsection
 

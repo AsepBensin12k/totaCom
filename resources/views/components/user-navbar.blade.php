@@ -1,10 +1,15 @@
 <nav class="bg-white/80 backdrop-blur shadow-md fixed w-full z-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between h-16 items-center">
+        <div class="flex justify-between h-22 items-center">
             <div class="flex-shrink-0 flex items-center">
                 <a href="{{ route('user.dashboard') }}"
-                    class="text-2xl font-bold bg-gradient-to-r from-teal-500 to-teal-700 text-transparent bg-clip-text">totaCom</a>
+                    class="flex items-center px-6 py-4 space-x-3 border-b border-gray-200">
+                    <img src="{{ asset('storage/logo/logo.png') }}" alt="Logo" class="h-12 w-auto">
+                    <a href="{{ route('user.dashboard') }}"
+                        class="text-2xl font-bold bg-gradient-to-r from-teal-500 to-teal-700 text-transparent bg-clip-text">totaCom</a>
+                </a>
             </div>
+
             <div class="hidden sm:flex sm:space-x-8">
                 <a href="{{ route('user.dashboard') }}" class="animated-link">Dashboard</a>
                 <a href="{{ route('user.profile.index') }}" class="animated-link">Profile</a>
@@ -14,10 +19,8 @@
                     <button type="button" class="animated-link flex items-center">
                         Pesanan
                         <svg class="ml-1 h-5 w-5 transition-transform duration-300 transform group-hover:rotate-180"
-                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                            stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M19 9l-7 7-7-7" />
+                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                         </svg>
                     </button>
 
@@ -67,13 +70,11 @@
             </div>
         </div>
     </div>
-    <div id="mobile-menu"
-        class="hidden sm:hidden bg-white border-t border-gray-200 flex flex-col space-y-2 px-4">
+    <div id="mobile-menu" class="hidden sm:hidden bg-white border-t border-gray-200 flex flex-col space-y-2 px-4">
 
         <div class="flex flex-col items-center justify-center p-4 text-center">
             {{-- Logo Profil Mobile: Sekarang bisa diklik ke halaman profil --}}
-            <a href="{{ route('user.profile.index') }}"
-                class="flex flex-col items-center justify-center text-center">
+            <a href="{{ route('user.profile.index') }}" class="flex flex-col items-center justify-center text-center">
                 <div class="w-16 h-16 rounded-full overflow-hidden shadow profile-glow mb-2">
                     <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->nama) }}" alt="Profile"
                         class="w-full h-full object-cover">

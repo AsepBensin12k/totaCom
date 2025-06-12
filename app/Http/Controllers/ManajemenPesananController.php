@@ -13,7 +13,7 @@ class ManajemenPesananController extends Controller
 {
     public function index(Request $request)
     {
-        // Ambil semua pesanan untuk membuat nomor pesanan berurutan
+
         $allPesanans = Pesanan::orderBy('tanggal', 'asc')->orderBy('id_pesanan', 'asc')->get();
         $nomorPesananMap = [];
         foreach ($allPesanans as $index => $pesanan) {
@@ -39,8 +39,6 @@ class ManajemenPesananController extends Controller
                         ->orWhere('username', 'LIKE', '%' . $searchTerm . '%');
                 });
 
-                // Search berdasarkan nomor pesanan
-                // Jika search term adalah angka, cari berdasarkan nomor pesanan
                 if (is_numeric($searchTerm)) {
                     $pesananIds = array_keys($nomorPesananMap, (int)$searchTerm);
                     if (!empty($pesananIds)) {
