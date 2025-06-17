@@ -28,7 +28,7 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
-// ADMIN ROUTES - Terpisah dengan middleware admin
+// ADMIN ROUTES
 Route::middleware(['auth:admin'])->group(function () {
     Route::prefix('admin')->group(function () {
 
@@ -58,12 +58,10 @@ Route::middleware(['auth:admin'])->group(function () {
     });
 });
 
-// USER/CUSTOMER ROUTES - Terpisah dengan middleware customer
-// USER/CUSTOMER ROUTES - Terpisah dengan middleware customer
+
 Route::prefix('user')->middleware(['auth:web'])->group(function () {
-    // --- GANTI RUTE INI ---
+
     Route::get('/dashboard', [UserDashboardController::class, 'index'])->name('user.dashboard');
-    // -----------------------
 
     Route::get('/profil', [CustomerProfilController::class, 'index'])->name('user.profile.index');
     Route::put('/profil', [CustomerProfilController::class, 'update'])->name('user.profile.update');
@@ -78,12 +76,11 @@ Route::prefix('user')->middleware(['auth:web'])->group(function () {
     Route::post('/pesanan/hapus-keranjang', [UserPesananController::class, 'hapusKeranjang'])->name('pesanan.hapusKeranjang');
     Route::post('/pesanan/hapus-produk-terpilih', [UserPesananController::class, 'hapusMultiple'])->name('pesanan.hapusMultiple');
 
-    // checkout
     Route::post('/pesanan/checkout', [UserPesananController::class, 'checkoutForm'])->name('user.pesanan.checkout');
     Route::post('/pesanan/checkout/simpan', [UserPesananController::class, 'checkout'])->name('user.pesanan.checkout.simpan');
 
     Route::get('/pesanan/invoice/{id_pesanan}', [UserPesananController::class, 'invoice'])->name('user.pesanan.invoice');
-    Route::get('/pesanan/riwayat', [UserPesananController::class, 'riwayat'])->name('temp.pesanan.riwayat'); // Ini masih ada temp, perlu dikonfirmasi
+    Route::get('/pesanan/riwayat', [UserPesananController::class, 'riwayat'])->name('temp.pesanan.riwayat');
     Route::get('/pesanan/riwayat-pesanan', [RiwayatUserController::class, 'index'])->name('pesanan.riwayat');
     Route::post('/pesanan/{id}/selesai', [RiwayatUserController::class, 'updateStatus'])->name('pesanan.selesai');
 });
