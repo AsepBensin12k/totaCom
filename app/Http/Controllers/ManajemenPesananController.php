@@ -95,7 +95,7 @@ class ManajemenPesananController extends Controller
     public function updateStatus(Request $request, $id)
     {
         $request->validate([
-            'id_status' => 'required|in:1,2',
+            'id_status' => 'required|in:2,4',
         ]);
 
         $pesanan = Pesanan::findOrFail($id);
@@ -104,8 +104,18 @@ class ManajemenPesananController extends Controller
             return back()->with('error', 'Hanya status Diproses yang bisa diubah.');
         }
 
-        if ($request->id_status != 2) {
-            return back()->with('error', 'Status hanya bisa diubah ke Dikirim.');
+        if (!in_array($request->id_status, [2, 4])) {
+            return back()->with('error', 'Status hanya bisa diubah ke Dikirim atau Ditolak.');
+        }
+
+        if ($request->id_status == 4) {
+            // Restore stock for each product in the order
+            $pesanan->load('detailPesanans.produk');
+            foreach ($pesanan->detailPesanans as $detail) {
+                if ($detail->produk) {
+                    $detail->produk->increment('stok', $detail->qty);
+                }
+            }
         }
 
         $pesanan->id_status = $request->id_status;

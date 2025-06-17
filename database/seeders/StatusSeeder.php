@@ -13,6 +13,7 @@ class StatusSeeder extends Seeder
             ['nama_status' => 'Dikemas'],
             ['nama_status' => 'Dikirim'],
             ['nama_status' => 'Selesai'],
+            ['nama_status' => 'Ditolak'],
         ]);
     }
 }

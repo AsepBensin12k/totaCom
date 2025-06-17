@@ -263,6 +263,7 @@
                                     @if ($pesanan->status->id_status == 1) bg-yellow-100 text-yellow-800
                                     @elseif($pesanan->status->id_status == 2) bg-blue-100 text-blue-800
                                     @elseif($pesanan->status->id_status == 3) bg-green-100 text-green-800
+                                    @elseif($pesanan->status->id_status == 4) bg-red-100 text-red-800
                                     @else bg-gray-100 text-gray-800 @endif">
                                     {{ $pesanan->status->nama_status ?? '-' }}
                                 </span>
@@ -360,16 +361,30 @@
                                                     class="text-yellow-600 font-semibold">{{ $pesanan->status->nama_status }}</span>
                                             </p>
                                         </div>
-                                        <form action="{{ route('manajemen.pesanan.updateStatus', $pesanan->id_pesanan) }}"
-                                            method="POST" class="inline">
-                                            @csrf
-                                            <input type="hidden" name="id_status" value="2">
-                                            <button type="submit"
-                                                onclick="return confirm('Yakin ingin mengubah status pesanan #PSN{{ str_pad($pesanan->nomor_pesanan, 4, '0', STR_PAD_LEFT) }} menjadi Dikirim?')"
-                                                class="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded transition duration-200 font-semibold">
-                                                📦 Tandai Sebagai Dikirim
-                                            </button>
-                                        </form>
+                                        <div class="flex gap-2">
+                                            <form
+                                                action="{{ route('manajemen.pesanan.updateStatus', $pesanan->id_pesanan) }}"
+                                                method="POST" class="inline">
+                                                @csrf
+                                                <input type="hidden" name="id_status" value="2">
+                                                <button type="submit"
+                                                    onclick="return confirm('Yakin ingin mengubah status pesanan #PSN{{ str_pad($pesanan->nomor_pesanan, 4, '0', STR_PAD_LEFT) }} menjadi Dikirim?')"
+                                                    class="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded transition duration-200 font-semibold">
+                                                    📦 Tandai Sebagai Dikirim
+                                                </button>
+                                            </form>
+                                            <form
+                                                action="{{ route('manajemen.pesanan.updateStatus', $pesanan->id_pesanan) }}"
+                                                method="POST" class="inline">
+                                                @csrf
+                                                <input type="hidden" name="id_status" value="4">
+                                                <button type="submit"
+                                                    onclick="return confirm('Yakin ingin menolak pesanan #PSN{{ str_pad($pesanan->nomor_pesanan, 4, '0', STR_PAD_LEFT) }}?')"
+                                                    class="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded transition duration-200 font-semibold">
+                                                    ❌ Tolak Pesanan
+                                                </button>
+                                            </form>
+                                        </div>
                                     </div>
                                 @elseif ($pesanan->id_status == 2)
                                     <div class="mt-4 p-3 bg-blue-50 border border-blue-200 rounded">
@@ -409,6 +424,10 @@
                 <div class="flex items-center mb-1">
                     <span class="px-2 py-1 rounded text-xs font-semibold bg-blue-100 text-blue-800 mr-2">Dikirim</span>
                     <span>Pesanan sedang dalam pengiriman</span>
+                </div>
+                <div class="flex items-center mb-1">
+                    <span class="px-2 py-1 rounded text-xs font-semibold bg-red-100 text-red-800 mr-2">Ditolak</span>
+                    <span>Pesanan dibatalkan oleh admin</span>
                 </div>
                 <div class="flex items-center">
                     <span class="px-2 py-1 rounded text-xs font-semibold bg-green-100 text-green-800 mr-2">Selesai</span>
