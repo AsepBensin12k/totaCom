@@ -337,14 +337,25 @@
                                                             </td>
                                                         </tr>
                                                     @endforeach
-                                                    <tr class="bg-gray-100 font-semibold">
-                                                        <td colspan="3" class="border px-4 py-2 text-right">Total
-                                                            Pesanan
-                                                        </td>
-                                                        <td class="border px-4 py-2 text-right text-lg">
-                                                            Rp{{ number_format($total, 0, ',', '.') }}
-                                                        </td>
-                                                    </tr>
+<tr class="bg-gray-100 font-semibold">
+    <td colspan="3" class="border px-4 py-2 text-right">Subtotal Produk</td>
+    <td class="border px-4 py-2 text-right">
+        Rp{{ number_format($total, 0, ',', '.') }}
+    </td>
+</tr>
+<tr class="bg-gray-100 font-semibold">
+    <td colspan="3" class="border px-4 py-2 text-right">Ongkos Kirim</td>
+    <td class="border px-4 py-2 text-right">
+        Rp{{ number_format($pesanan->total_ongkir ?? 0, 0, ',', '.') }}
+    </td>
+</tr>
+<tr class="bg-gray-200 font-bold">
+    <td colspan="3" class="border px-4 py-2 text-right">Total (Produk + Ongkir)</td>
+    <td class="border px-4 py-2 text-right text-lg">
+        Rp{{ number_format($pesanan->total_harga ?? 0, 0, ',', '.') }}
+    </td>
+</tr>
+
                                                 </tbody>
                                             </table>
                                         </div>

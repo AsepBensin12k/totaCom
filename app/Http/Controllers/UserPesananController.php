@@ -147,6 +147,47 @@ public function checkout(Request $request)
     try {
         $total = collect($checkoutItems)->sum(fn($item) => $item['jumlah_produk'] * $item['produk']['harga']);
 
+        // Tambahkan ongkir
+        $user = Auth::user();
+        $idKecamatan = $user->alamat->id_kecamatan ?? null;
+        $tarif = [
+        1 => 30000,
+        2 => 30000,
+        3 => 30000,
+        4 => 20000,
+        5 => 25000,
+        6 => 35000,
+        7 => 35000,
+        8 => 15000,
+        9 => 12000,
+        10 => 15000,
+        11 => 0,
+        12 => 15000,
+        13 => 20000,
+        14 => 22000,
+        15 => 25000,
+        16 => 30000,
+        17 => 35000,
+        18 => 30000,
+        19 => 25000,
+        20 => 22000,
+        21 => 20000,
+        22 => 20000,
+        23 => 15000,
+        24 => 20000,
+        25 => 25000,
+        26 => 25000,
+        27 => 22000,
+        28 => 22000,
+        29 => 10000,
+        30 => 5000,
+        31 => 12000,
+        ];
+        $ongkir = $tarif[$idKecamatan] ?? 0;
+
+        $total += $ongkir;
+
+
 
         $buktiPembayaranPath = null;
         if ($request->metode_pembayaran === 'transfer' && $request->hasFile('bukti_pembayaran')) {
@@ -195,13 +236,63 @@ public function checkout(Request $request)
     }
 }
 
-    public function invoice($id_pesanan)
-    {
-        $pesanan = Pesanan::with(['detailPesanans.produk', 'akun', 'status', 'metodePembayaran'])
-            ->findOrFail($id_pesanan);
+public function invoice($id_pesanan)
+{
+    $ongkirArray = [
+        1 => 30000,
+        2 => 30000,
+        3 => 30000,
+        4 => 20000,
+        5 => 25000,
+        6 => 35000,
+        7 => 35000,
+        8 => 15000,
+        9 => 12000,
+        10 => 15000,
+        11 => 0,
+        12 => 15000,
+        13 => 20000,
+        14 => 22000,
+        15 => 25000,
+        16 => 30000,
+        17 => 35000,
+        18 => 30000,
+        19 => 25000,
+        20 => 22000,
+        21 => 20000,
+        22 => 20000,
+        23 => 15000,
+        24 => 20000,
+        25 => 25000,
+        26 => 25000,
+        27 => 22000,
+        28 => 22000,
+        29 => 10000,
+        30 => 5000,
+        31 => 12000,
+    ];
 
-        return view('user.pesanan.invoice', compact('pesanan'));
+    $pesanan = Pesanan::with(['detailPesanans.produk', 'akun.alamat', 'status', 'metodePembayaran'])
+        ->findOrFail($id_pesanan);
+
+    // Ambil id_kecamatan dari alamat akun
+    $idKecamatan = $pesanan->akun->alamat->id_kecamatan ?? null;
+
+    // Hitung ongkir berdasarkan kecamatan, default 0 jika tidak ada
+    $ongkir = $ongkirArray[$idKecamatan] ?? 0;
+
+    // Hitung total harga produk
+    $totalProduk = 0;
+    foreach ($pesanan->detailPesanans as $item) {
+        $totalProduk += $item->qty * $item->harga;
     }
+
+    // Total bayar = total produk + ongkir
+    $totalBayar = $totalProduk + $ongkir;
+
+    // Kirim ke view
+    return view('user.pesanan.invoice', compact('pesanan', 'ongkir', 'totalProduk', 'totalBayar'));
+}
 
     private function getMetodePembayaranId($metode)
     {
