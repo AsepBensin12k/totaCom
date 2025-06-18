@@ -18,11 +18,11 @@
                     <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 pb-4 border-b border-gray-200">
                         {{-- Nomor Pesanan --}}
                         <h2 class="font-bold text-xl text-gray-800 mb-2 md:mb-0">
-                            Pesanan #{{ str_pad($pesanans->count() - $loop->index, 3, '0', STR_PAD_LEFT) }} {{-- Penomoran dari yang terbaru ke terlama --}}
+                            Pesanan #PSN{{ str_pad($pesanans->count() - $loop->index, 4, '0', STR_PAD_LEFT) }} {{-- Penomoran dari yang terbaru ke terlama --}}
                         </h2>
                         {{-- Tanggal dan Metode Pembayaran --}}
                         <div class="text-right">
-                            <p class="text-sm text-gray-500">Tanggal Pesanan: <span class="font-medium text-gray-700">{{ \Carbon\Carbon::parse($pesanan->created_at)->format('d F Y, H:i') }}</span></p>
+                            <p class="text-sm text-gray-500">Tanggal Pesanan: <span class="font-medium text-gray-700">{{ \Carbon\Carbon::parse($pesanan->created_at)->timezone('Asia/Jakarta')->format('d F Y, H:i') }}</span></p>
                             <p class="text-sm text-gray-500">Metode Pembayaran: <span class="font-medium text-gray-700">{{ $pesanan->metodePembayaran->nama_metode ?? 'Belum dipilih' }}</span></p>
                         </div>
                     </div>
@@ -101,6 +101,13 @@
                                 Status: {{ $pesanan->status->nama_status }}
                             </span>
                         @endif
+                            {{-- Tombol Lihat Bukti Pembayaran --}}
+                    @if($pesanan->bukti_pembayaran)
+                        <a href="{{ asset('storage/' . $pesanan->bukti_pembayaran) }}" target="_blank"
+                            class="mt-3 sm:mt-0 sm:ml-4 inline-block bg-blue-100 hover:bg-blue-200 text-blue-700 font-semibold py-2 px-4 rounded-lg text-sm transition duration-300 ease-in-out transform hover:scale-105 shadow-sm">
+                            🔍 Lihat Bukti Pembayaran
+                        </a>
+                    @endif
                     </div>
                 </div>
             @endforeach
