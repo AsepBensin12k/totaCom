@@ -36,9 +36,53 @@
                 </tbody>
             </table>
 
-            <div class="text-right mb-4">
-                <strong>Total: Rp{{ number_format($total, 0, ',', '.') }}</strong>
+            @php
+                $idKecamatan = Auth::user()->alamat->id_kecamatan ?? null;
+                $tarifOngkir = [
+        1 => 30000,
+        2 => 30000,
+        3 => 30000,
+        4 => 20000,
+        5 => 25000,
+        6 => 35000,
+        7 => 35000,
+        8 => 15000,
+        9 => 12000,
+        10 => 15000,
+        11 => 0,
+        12 => 15000,
+        13 => 20000,
+        14 => 22000,
+        15 => 25000,
+        16 => 30000,
+        17 => 35000,
+        18 => 30000,
+        19 => 25000,
+        20 => 22000,
+        21 => 20000,
+        22 => 20000,
+        23 => 15000,
+        24 => 20000,
+        25 => 25000,
+        26 => 25000,
+        27 => 22000,
+        28 => 22000,
+        29 => 10000,
+        30 => 5000,
+        31 => 12000,
+        ];
+                $ongkir = $tarifOngkir[$idKecamatan] ?? 0;
+                $totalWithOngkir = $total + $ongkir;
+            @endphp
+
+            <div class="text-right mb-2">
+                <p>Ongkir: <strong>Rp{{ number_format($ongkir, 0, ',', '.') }}</strong></p>
             </div>
+            <div class="text-right mb-4">
+                <strong>Total + Ongkir: Rp{{ number_format($totalWithOngkir, 0, ',', '.') }}</strong>
+            </div>
+
+
 
             <div class="mb-4">
                 <label for="metode_pembayaran" class="block mb-2 font-medium">Metode Pembayaran:</label>

@@ -5,11 +5,11 @@
 @section('content')
 <div class="container mx-auto px-4 py-6">
     <div class="bg-white shadow-md rounded p-6">
-        <h2 class="text-2xl font-bold mb-4">Invoice Pesanan #{{ $pesanan->id_pesanan }}</h2>
+        <h2 class="text-2xl font-bold mb-4">Invoice Pesanan</h2>
 
         <!-- Informasi Umum -->
         <div class="mb-6">
-            <p><strong>Tanggal:</strong> {{ \Carbon\Carbon::parse($pesanan->tanggal)->format('d M Y') }}</p>
+            <p><strong>Tanggal:</strong> {{ \Carbon\Carbon::parse($pesanan->created_at)->format('d M Y , H:i') }}</p>
             <p><strong>Status:</strong> {{ $pesanan->status->nama_status }}</p>
             <p><strong>Metode Pembayaran:</strong> {{ $pesanan->metodePembayaran->nama_metode ?? '-' }}</p>
         </div>
@@ -26,7 +26,9 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @php $total = 0; @endphp
+                    @php
+                        $total = 0;
+                    @endphp
                     @foreach ($pesanan->detailPesanans as $item)
                         @php
                             $subtotal = $item->qty * $item->harga;
@@ -40,14 +42,20 @@
                         </tr>
                     @endforeach
                     <tr class="font-semibold bg-gray-200">
-                        <td colspan="3" class="px-4 py-2 border text-right">Total</td>
-                        <td class="px-4 py-2 border">Rp{{ number_format($total, 0, ',', '.') }}</td>
+                        <td colspan="3" class="px-4 py-2 border text-right">Total Produk</td>
+                        <td class="px-4 py-2 border">Rp{{ number_format($totalProduk, 0, ',', '.') }}</td>
                     </tr>
                 </tbody>
             </table>
         </div>
 
-        <!-- Info -->
+        <!-- Ongkir dan Total Bayar -->
+        <div class="text-right mb-6">
+            <p><strong>Ongkos Kirim:</strong> Rp{{ number_format($ongkir, 0, ',', '.') }}</p>
+            <p class="text-lg font-semibold"><strong>Total Bayar:</strong> Rp{{ number_format($totalBayar, 0, ',', '.') }}</p>
+        </div>
+
+        <!-- Info Status Pesanan -->
         <div class="bg-blue-50 border-l-4 border-blue-500 p-4 mb-6">
             <div class="flex items-start">
                 <div class="flex-shrink-0">
@@ -63,6 +71,7 @@
             </div>
         </div>
 
+        <!-- Tombol Kembali -->
         <div class="text-right">
             <a href="{{ route('user.dashboard') }}"
                class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">

@@ -13,7 +13,6 @@ class ManajemenPesananController extends Controller
 {
     public function index(Request $request)
     {
-
         $allPesanans = Pesanan::orderBy('tanggal', 'asc')->orderBy('id_pesanan', 'asc')->get();
         $nomorPesananMap = [];
         foreach ($allPesanans as $index => $pesanan) {
@@ -22,18 +21,16 @@ class ManajemenPesananController extends Controller
 
         $query = Pesanan::with([
             'status',
-            'akun',
+            'akun.alamat',
             'metodePembayaran',
             'detailPesanans' => function ($query) {
                 $query->with('produk');
             }
         ]);
 
-        // Filter berdasarkan search (nomor pesanan atau nama pemesan)
         if ($request->filled('search')) {
             $searchTerm = $request->search;
             $query->where(function ($q) use ($searchTerm, $nomorPesananMap) {
-                // Search berdasarkan nama pemesan
                 $q->whereHas('akun', function ($subQuery) use ($searchTerm) {
                     $subQuery->where('nama', 'LIKE', '%' . $searchTerm . '%')
                         ->orWhere('username', 'LIKE', '%' . $searchTerm . '%');
@@ -46,7 +43,6 @@ class ManajemenPesananController extends Controller
                     }
                 }
 
-                // Search berdasarkan format nomor pesanan (#PSN0001, PSN0001, PSN1, dll)
                 if (preg_match('/^#?PSN(\d+)$/i', $searchTerm, $matches)) {
                     $nomorPesanan = (int)$matches[1];
                     $pesananIds = array_keys($nomorPesananMap, $nomorPesanan);
@@ -57,13 +53,11 @@ class ManajemenPesananController extends Controller
             });
         }
 
-        // Filter berdasarkan status (mendukung multiple selection)
         if ($request->filled('status')) {
             $statusIds = is_array($request->status) ? $request->status : [$request->status];
             $query->whereIn('id_status', $statusIds);
         }
 
-        // Filter berdasarkan metode pembayaran (mendukung multiple selection)
         if ($request->filled('metode_pembayaran')) {
             $metodeIds = is_array($request->metode_pembayaran) ? $request->metode_pembayaran : [$request->metode_pembayaran];
             $query->whereIn('id_metode', $metodeIds);
@@ -75,6 +69,13 @@ class ManajemenPesananController extends Controller
 
         foreach ($pesanans as $pesanan) {
             $pesanan->nomor_pesanan = $nomorPesananMap[$pesanan->id_pesanan];
+
+            $totalProduk = $pesanan->detailPesanans->sum(function ($detail) {
+                return $detail->harga * $detail->qty;
+            });
+
+            $pesanan->total_ongkir = $this->hitungOngkir($pesanan);
+            $pesanan->total_harga = $totalProduk + $pesanan->total_ongkir;
         }
 
         foreach ($pesanans as $pesanan) {
@@ -85,11 +86,26 @@ class ManajemenPesananController extends Controller
             }
         }
 
-        // Ambil data untuk dropdown filter
         $statuses = Status::all();
         $metodePembayarans = MetodePembayaran::all();
 
         return view('admin.manajemen-pesanan.index', compact('pesanans', 'statuses', 'metodePembayarans'));
+    }
+
+    private function hitungOngkir($pesanan)
+    {
+        $tarif = [
+            1 => 30000, 2 => 30000, 3 => 30000, 4 => 20000, 5 => 25000,
+            6 => 35000, 7 => 35000, 8 => 15000, 9 => 12000, 10 => 15000,
+            11 => 0, 12 => 15000, 13 => 20000, 14 => 22000, 15 => 25000,
+            16 => 30000, 17 => 35000, 18 => 30000, 19 => 25000, 20 => 22000,
+            21 => 20000, 22 => 20000, 23 => 15000, 24 => 20000, 25 => 25000,
+            26 => 25000, 27 => 22000, 28 => 22000, 29 => 10000, 30 => 5000,
+            31 => 12000,
+        ];
+
+        $idKecamatan = $pesanan->akun->alamat->id_kecamatan ?? null;
+        return $tarif[$idKecamatan] ?? 0;
     }
 
     public function updateStatus(Request $request, $id)
@@ -104,12 +120,7 @@ class ManajemenPesananController extends Controller
             return back()->with('error', 'Hanya status Diproses yang bisa diubah.');
         }
 
-        if (!in_array($request->id_status, [2, 4])) {
-            return back()->with('error', 'Status hanya bisa diubah ke Dikirim atau Ditolak.');
-        }
-
         if ($request->id_status == 4) {
-            // Restore stock for each product in the order
             $pesanan->load('detailPesanans.produk');
             foreach ($pesanan->detailPesanans as $detail) {
                 if ($detail->produk) {

@@ -25,7 +25,7 @@ class UserDashboardController extends Controller
 
 
         $recommendedProducts = Produk::inRandomOrder()
-                                     ->limit(3)
+                                     ->limit(4)
                                      ->get();
 
         // Kirim data ke view dashboard
