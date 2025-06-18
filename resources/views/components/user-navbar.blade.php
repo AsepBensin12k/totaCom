@@ -6,7 +6,7 @@
                     class="flex items-center px-6 py-4 space-x-3 border-b border-gray-200">
                     <img src="{{ asset('storage/logo/logo.png') }}" alt="Logo" class="h-12 w-auto">
                     <a href="{{ route('user.dashboard') }}"
-                        class="text-2xl font-bold bg-gradient-to-r from-teal-500 to-teal-700 text-transparent bg-clip-text">totaCom</a>
+                        class="text-2xl font-bold bg-gradient-to-r from-teal-500 to-teal-700 text-transparent bg-clip-text">TotaCom</a>
                 </a>
             </div>
 

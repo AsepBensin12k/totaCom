@@ -65,7 +65,7 @@ class ManajemenPesananController extends Controller
 
         $pesanans = $query->orderBy('tanggal', 'desc')
             ->orderBy('id_pesanan', 'desc')
-            ->get();
+            ->paginate(10);
 
         foreach ($pesanans as $pesanan) {
             $pesanan->nomor_pesanan = $nomorPesananMap[$pesanan->id_pesanan];

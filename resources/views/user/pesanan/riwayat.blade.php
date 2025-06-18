@@ -2,28 +2,38 @@
 
 @section('content')
     <div class="container mx-auto p-4 sm:px-6 lg:px-8 mt-4">
-        <h1 class="text-3xl font-extrabold text-teal-600 mb-8 text-center">Riwayat Pesanan Saya</h1>
+        <h1 class="text-3xl font-extrabold text-gray-900 mb-8 text-center">Riwayat Pesanan Saya</h1>
 
-    @if($pesanans->isEmpty())
-        <div class="bg-white p-6 rounded-lg shadow-md text-center">
-            <p class="text-gray-600 text-lg mb-4">Anda belum memiliki riwayat pesanan. Mari mulai jelajahi produk kami!</p>
-            <a href="{{ url('/') }}" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg transition duration-300 transform hover:scale-105">
-                Mulai Belanja
-            </a>
-        </div>
-    @else
-        <div class="space-y-8"> {{-- Menambah jarak antar setiap kartu pesanan --}}
-            @foreach($pesanans as $index => $pesanan)
-                <div class="bg-white border border-gray-200 rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow duration-300">
-                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 pb-4 border-b border-gray-200">
-                        {{-- Nomor Pesanan --}}
-                        <h2 class="font-bold text-xl text-gray-800 mb-2 md:mb-0">
-                            Pesanan #PSN{{ str_pad($pesanans->count() - $loop->index, 4, '0', STR_PAD_LEFT) }} {{-- Penomoran dari yang terbaru ke terlama --}}
-                        </h2>
-                        {{-- Tanggal dan Metode Pembayaran --}}
-                        <div class="text-right">
-                            <p class="text-sm text-gray-500">Tanggal Pesanan: <span class="font-medium text-gray-700">{{ \Carbon\Carbon::parse($pesanan->created_at)->timezone('Asia/Jakarta')->format('d F Y, H:i') }}</span></p>
-                            <p class="text-sm text-gray-500">Metode Pembayaran: <span class="font-medium text-gray-700">{{ $pesanan->metodePembayaran->nama_metode ?? 'Belum dipilih' }}</span></p>
+        @if ($pesanans->isEmpty())
+            <div class="bg-white p-6 rounded-lg shadow-md text-center">
+                <p class="text-gray-600 text-lg mb-4">Anda belum memiliki riwayat pesanan. Mari mulai jelajahi produk kami!
+                </p>
+                <a href="{{ url('/') }}"
+                    class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg transition duration-300 transform hover:scale-105">
+                    Mulai Belanja
+                </a>
+            </div>
+        @else
+            <div class="space-y-8"> {{-- Menambah jarak antar setiap kartu pesanan --}}
+                @foreach ($pesanans as $index => $pesanan)
+                    <div
+                        class="bg-white border border-gray-200 rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow duration-300">
+                        <div
+                            class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 pb-4 border-b border-gray-200">
+                            {{-- Nomor Pesanan --}}
+                            <h2 class="font-bold text-xl text-gray-800 mb-2 md:mb-0">
+                                Pesanan #PSN{{ str_pad($pesanans->count() - $loop->index, 4, '0', STR_PAD_LEFT) }}
+                                {{-- Penomoran dari yang terbaru ke terlama --}}
+                            </h2>
+                            {{-- Tanggal dan Metode Pembayaran --}}
+                            <div class="text-right">
+                                <p class="text-sm text-gray-500">Tanggal Pesanan: <span
+                                        class="font-medium text-gray-700">{{ \Carbon\Carbon::parse($pesanan->created_at)->timezone('Asia/Jakarta')->format('d F Y, H:i') }}</span>
+                                </p>
+                                <p class="text-sm text-gray-500">Metode Pembayaran: <span
+                                        class="font-medium text-gray-700">{{ $pesanan->metodePembayaran->nama_metode ?? 'Belum dipilih' }}</span>
+                                </p>
+                            </div>
                         </div>
 
                         {{-- Status Pesanan --}}
@@ -36,15 +46,16 @@
                                         'Dikirim' => 'bg-blue-100 text-blue-800',
                                         'Selesai' => 'bg-green-100 text-green-800',
                                         'Ditolak' => 'bg-red-100 text-red-800',
-                                    ][$pesanan->status->nama_status] ?? 'bg-gray-100 text-gray-800';
+                                    ][$pesanan->status->nama_status] ?? 'bg-gray-100 text-gray-800'; // Default jika status tidak terdefinisi
                             @endphp
                             <span class="px-3 py-1 rounded-full text-sm font-semibold {{ $statusClass }}">
                                 {{ $pesanan->status->nama_status }}
                             </span>
                         </div>
 
+                        {{-- Detail Produk dalam Tabel --}}
                         <h3 class="font-bold text-gray-800 text-lg mb-3 mt-5">Detail Produk:</h3>
-                        <div class="overflow-x-auto rounded-lg border border-gray-300">
+                        <div class="overflow-x-auto rounded-lg border border-gray-300"> {{-- Membuat tabel responsif dengan border --}}
                             <table class="min-w-full divide-y divide-gray-200">
                                 <thead class="bg-gray-100">
                                     <tr>
@@ -93,46 +104,52 @@
                             </table>
                         </div>
 
+                        {{-- Bagian Aksi (Invoice & Tandai Selesai) --}}
                         <div
                             class="flex flex-col sm:flex-row justify-between items-center mt-6 pt-4 border-t border-gray-200">
 
+                            {{-- Tombol "Tandai Selesai" hanya jika statusnya "Dikirim" (ID 2) --}}
                             @if ($pesanan->status->id_status == 2)
                                 <form id="form-selesai-{{ $pesanan->id_pesanan }}"
                                     action="{{ route('pesanan.selesai', $pesanan->id_pesanan) }}" method="POST">
                                     @csrf
                                     <button type="button" onclick="konfirmasiSelesai('{{ $pesanan->id_pesanan }}')"
                                         class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-5 rounded-lg text-sm transition duration-300 ease-in-out transform hover:scale-105 shadow-md">
-
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline-block mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                    </svg>
-                                    Tandai Selesai
-                                </button>
-                            </form>
-                        {{-- Tampilkan pesan jika status bukan "Dikirim" --}}
-                        @else
-                            <span class="bg-gray-200 text-gray-700 px-3 py-1 rounded-lg text-sm">
-                                Status: {{ $pesanan->status->nama_status }}
-                            </span>
-                        @endif
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline-block mr-1"
+                                            fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                        Tandai Selesai
+                                    </button>
+                                </form>
+                                {{-- Tampilkan pesan jika status bukan "Dikirim" --}}
+                            @else
+                                <span class="bg-gray-200 text-gray-700 px-3 py-1 rounded-lg text-sm">
+                                    Status: {{ $pesanan->status->nama_status }}
+                                </span>
+                            @endif
                             {{-- Tombol Lihat Bukti Pembayaran --}}
-                    @if($pesanan->bukti_pembayaran)
-                        <a href="{{ asset('storage/' . $pesanan->bukti_pembayaran) }}" target="_blank"
-                            class="mt-3 sm:mt-0 sm:ml-4 inline-block bg-blue-100 hover:bg-blue-200 text-blue-700 font-semibold py-2 px-4 rounded-lg text-sm transition duration-300 ease-in-out transform hover:scale-105 shadow-sm">
-                            🔍 Lihat Bukti Pembayaran
-                        </a>
-                    @endif
+                            @if ($pesanan->bukti_pembayaran)
+                                <a href="{{ asset('storage/' . $pesanan->bukti_pembayaran) }}" target="_blank"
+                                    class="mt-3 sm:mt-0 sm:ml-4 inline-block bg-blue-100 hover:bg-blue-200 text-blue-700 font-semibold py-2 px-4 rounded-lg text-sm transition duration-300 ease-in-out transform hover:scale-105 shadow-sm">
+                                    🔍 Lihat Bukti Pembayaran
+                                </a>
+                            @endif
+                        </div>
                     </div>
                 @endforeach
             </div>
-            @if ($pesanans->hasPages())
-                <div class="mt-8 mb-8">
-                    {{ $pesanans->links() }}
-                </div>
-            @endif
+            {{-- Jika Anda menambahkan paginasi di controller nantinya, ini tempatnya --}}
+            {{-- @if ($pesanans->hasPages())
+            <div class="mt-8">
+                {{ $pesanans->links() }}
+            </div>
+        @endif --}}
         @endif
     </div>
 
+    {{-- SweetAlert2 CDN (Pastikan koneksi internet tersedia) --}}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>

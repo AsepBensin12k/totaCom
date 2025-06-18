@@ -35,9 +35,9 @@
             <label for="password"
                 class="block text-sm font-semibold text-gray-700 mb-2 transition-colors duration-200 group-focus-within:text-teal-600">
                 <span class="flex items-center">
+                    <!-- Replaced microphone icon with a key icon -->
                     <svg class="w-4 h-4 mr-2 text-teal-500" fill="currentColor" viewBox="0 0 24 24">
-                        <path
-                            d="M12,17A2,2 0 0,0 14,15C14,13.89 13.1,13 12,13A2,2 0 0,0 10,15A2,2 0 0,0 12,17M18,8A2,2 0 0,1 20,10V20A2,2 0 0,1 18,22H6A2,2 0 0,1 4,20V10C4,8.89 4.9,8 6,8H7V6A5,5 0 0,1 12,1A5,5 0 0,1 17,6V8H18M12,3A3,3 0 0,0 9,6V8H15V6A3,3 0 0,0 12,3Z" />
+                        <path d="M12 2C10.343 2 9 3.343 9 5v4H7v6h10v-6h-2V5c0-1.657-1.343-3-3-3zM7 15v2h10v-2H7z" />
                     </svg>
                     Password
                 </span>
