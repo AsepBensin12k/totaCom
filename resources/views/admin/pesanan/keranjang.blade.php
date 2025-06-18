@@ -3,7 +3,6 @@
 
 @section('content')
     <div class="container mx-auto px-4 py-4">
-        <h2 class="text-2xl font-bold mb-4">Keranjang</h2>
 
         @if (session('success'))
             <div id="flash-message" class="bg-green-100 text-green-800 p-3 rounded mb-4">{{ session('success') }}</div>
