@@ -9,7 +9,7 @@
 
             <!-- Informasi Umum -->
             <div class="mb-6">
-                <p><strong>Tanggal:</strong> {{ \Carbon\Carbon::parse($pesanan->tanggal)->format('d M Y') }}</p>
+                <p><strong>Tanggal:</strong> {{ \Carbon\Carbon::parse($pesanan->created_at)->timezone('Asia/Jakarta')->format('d F Y, H:i') }}</p>
                 <p><strong>Status:</strong> {{ $pesanan->status->nama_status }}</p>
                 <p><strong>Metode Pembayaran:</strong> {{ $pesanan->metodePembayaran->nama_metode ?? '-' }}</p>
                 <p><strong>Pemesan:</strong> {{ $pesanan->akun->nama ?? 'Tidak diketahui' }}</p>

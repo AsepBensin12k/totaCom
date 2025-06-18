@@ -7,12 +7,12 @@
         <div class="bg-white shadow-md rounded p-6">
             <h2 class="text-2xl font-bold mb-4">Invoice Pesanan</h2>
 
-            <!-- Informasi Umum -->
-            <div class="mb-6">
-                <p><strong>Tanggal:</strong> {{ \Carbon\Carbon::parse($pesanan->created_at)->format('d M Y , H:i') }}</p>
-                <p><strong>Status:</strong> {{ $pesanan->status->nama_status }}</p>
-                <p><strong>Metode Pembayaran:</strong> {{ $pesanan->metodePembayaran->nama_metode ?? '-' }}</p>
-            </div>
+        <!-- Informasi Umum -->
+        <div class="mb-6">
+            <p><strong>Tanggal:</strong> {{ \Carbon\Carbon::parse($pesanan->created_at)->timezone('Asia/Jakarta')->format('d F Y, H:i') }}</p>
+            <p><strong>Status:</strong> {{ $pesanan->status->nama_status }}</p>
+            <p><strong>Metode Pembayaran:</strong> {{ $pesanan->metodePembayaran->nama_metode ?? '-' }}</p>
+        </div>
 
             <!-- Tabel Produk -->
             <div class="overflow-x-auto">
