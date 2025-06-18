@@ -39,7 +39,8 @@
         @endphp
         <a href="{{ route($routeName) }}"
             class="block px-4 py-2 rounded-lg {{ request()->routeIs('profil.index') ? 'bg-teal-600 text-white font-semibold' : 'hover:bg-teal-100' }}">
-            Profile</a>
+            Profile
+        </a>
     </nav>
     <form action="{{ route('logout') }}" method="POST" class="p-4 border-t">
         @csrf

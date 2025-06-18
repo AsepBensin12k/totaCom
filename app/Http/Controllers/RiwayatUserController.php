@@ -15,10 +15,13 @@ class RiwayatUserController extends Controller
         $pesanans = Pesanan::with(['status', 'metodePembayaran', 'detailPesanans.produk', 'akun.alamat'])
             ->where('id_akun', $userId)
             ->orderBy('created_at', 'desc')
-            ->get();
+            ->paginate(5);
+
+        $currentPage = $pesanans->currentPage();
+        $perPage = $pesanans->perPage();
 
         foreach ($pesanans as $index => $pesanan) {
-            $pesanan->nomor_pesanan = $index + 1;
+            $pesanan->nomor_pesanan = ($currentPage - 1) * $perPage + $index + 1;
 
             // Total produk
             $totalProduk = $pesanan->detailPesanans->sum(function ($detail) {
@@ -51,37 +54,37 @@ class RiwayatUserController extends Controller
     private function hitungOngkir($pesanan)
     {
         $tarif = [
-        1 => 30000,
-        2 => 30000,
-        3 => 30000,
-        4 => 20000,
-        5 => 25000,
-        6 => 35000,
-        7 => 35000,
-        8 => 15000,
-        9 => 12000,
-        10 => 15000,
-        11 => 0,
-        12 => 15000,
-        13 => 20000,
-        14 => 22000,
-        15 => 25000,
-        16 => 30000,
-        17 => 35000,
-        18 => 30000,
-        19 => 25000,
-        20 => 22000,
-        21 => 20000,
-        22 => 20000,
-        23 => 15000,
-        24 => 20000,
-        25 => 25000,
-        26 => 25000,
-        27 => 22000,
-        28 => 22000,
-        29 => 10000,
-        30 => 5000,
-        31 => 12000,
+            1 => 30000,
+            2 => 30000,
+            3 => 30000,
+            4 => 20000,
+            5 => 25000,
+            6 => 35000,
+            7 => 35000,
+            8 => 15000,
+            9 => 12000,
+            10 => 15000,
+            11 => 0,
+            12 => 15000,
+            13 => 20000,
+            14 => 22000,
+            15 => 25000,
+            16 => 30000,
+            17 => 35000,
+            18 => 30000,
+            19 => 25000,
+            20 => 22000,
+            21 => 20000,
+            22 => 20000,
+            23 => 15000,
+            24 => 20000,
+            25 => 25000,
+            26 => 25000,
+            27 => 22000,
+            28 => 22000,
+            29 => 10000,
+            30 => 5000,
+            31 => 12000,
         ];
 
         $idKecamatan = $pesanan->akun->alamat->id_kecamatan ?? null;

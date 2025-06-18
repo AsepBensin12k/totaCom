@@ -21,9 +21,12 @@
         <div class="absolute inset-0 bg-teal-800 opacity-30 z-10"></div> {{-- Overlay warna teal --}}
 
         {{-- Main Content --}}
-        <div class="relative z-20 flex flex-col items-center justify-center h-full text-center px-6 text-white animate-fade-in-up">
+        <div
+            class="relative z-20 flex flex-col items-center justify-center h-full text-center px-6 text-white animate-fade-in-up">
             <h1 class="text-4xl md:text-6xl font-extrabold mb-4 drop-shadow-lg leading-tight">
+
                 Selamat Datang di <span class="text-teal-300">TotaCom</span>, <br class="md:hidden"/> {{ Auth::user()->nama }}!
+
             </h1>
             <p class="text-lg md:text-2xl max-w-3xl mx-auto mb-10 drop-shadow-md opacity-90">
                 Temukan berbagai peralatan dan kebutuhan pertanian terbaik untuk mendukung produktivitas Anda.
@@ -32,16 +35,19 @@
 
             <div class="space-y-4 sm:space-y-0 sm:space-x-6 flex flex-col sm:flex-row justify-center">
                 <a href="{{ route('pesanan.buat') }}"
+
                    class="group inline-flex items-center justify-center bg-teal-600 hover:bg-teal-700 px-8 py-3 rounded-full text-xl font-semibold shadow-lg transition-all duration-300 transform hover:scale-105 border-2 border-teal-600 hover:border-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-opacity-75">
                     <i class="fas fa-plus-circle mr-3 group-hover:rotate-6 transition-transform"></i> Buat Pesanan Baru
                 </a>
                 <a href="{{ route('pesanan.riwayat') }}"
                    class="group inline-flex items-center justify-center bg-transparent border-2 border-white hover:border-teal-300 text-white hover:text-teal-300 px-8 py-3 rounded-full text-xl font-semibold shadow-lg transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-75">
                    <i class="fas fa-history mr-3 group-hover:scale-110 transition-transform"></i> Riwayat Pesanan
+
                 </a>
             </div>
         </div>
     </div>
+
 
     <div class="container mx-auto px-4 py-12"> {{-- Container untuk bagian di bawah hero section --}}
 
@@ -75,11 +81,14 @@
                 <i class="fas fa-map-marker-alt text-teal-600 mr-3 text-4xl"></i> Lokasi Toko Kami
             </h2>
             <div class="grid md:grid-cols-2 gap-8 items-center">
+
                 {{-- Kolom Alamat Teks --}}
+
                 <div class="bg-teal-50 text-gray-800 p-6 rounded-lg shadow-md border border-teal-100">
                     <h3 class="text-xl font-bold mb-3 flex items-center text-teal-700">
                         <i class="fas fa-store mr-2"></i> Alamat Lengkap TotaCom
                     </h3>
+
                     <p class="text-lg italic mb-4">Jl. Wolter Monginsidi No.89, Langsepam, Rowo Indah, Kec. Ajung, Kabupaten Jember, Jawa Timur 68175</p>
 
                     <div class="mb-3">
@@ -89,8 +98,10 @@
 
                     <div class="mt-4">
                         <a href="https://www.google.com/maps/search/Jl.+Wolter+Monginsidi+No.89,+Langsepam,+Rowo+Indah,+Kec.+Ajung,+Kabupaten+Jember,+Jawa+Timur+68175"
+
                            target="_blank" rel="noopener noreferrer"
                            class="inline-block bg-teal-600 hover:bg-teal-700 text-white px-5 py-2 rounded-full font-semibold transition transform hover:scale-105 shadow-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-opacity-75">
+
                             <i class="fas fa-directions mr-2"></i> Buka di Google Maps
                         </a>
                     </div>
@@ -135,6 +146,7 @@
                             </div>
                             <div class="text-left md:text-right">
                                 @php
+
                                     // Mapping id_status ke kelas CSS
                                     $statusIdClasses = [
                                         1 => 'bg-yellow-100 text-yellow-800', // Pending/Menunggu Pembayaran
@@ -154,11 +166,14 @@
                 @empty
                     <div class="bg-teal-50 p-6 rounded-lg text-center border border-teal-100 shadow-sm">
                         <p class="text-gray-500 py-4 text-lg">
+
                             Anda belum memiliki pesanan terbaru. <br/>
                             <a href="{{ route('pesanan.buat') }}" class="text-teal-600 hover:underline font-semibold mt-2 inline-block">Mulai petualangan Anda dengan membuat pesanan pertama</a>!
+
                         </p>
                     </div>
                 @endforelse
+
 
                 @if(isset($latestOrders) && $latestOrders->count() > 0) {{-- Perbaikan: Tambahkan isset() check --}}
                     <div class="text-center mt-8">
@@ -190,6 +205,7 @@
                             </div>
                         @endif
                         <div class="p-5">
+
                             <h3 class="font-bold text-xl text-gray-800 mb-2 group-hover:text-teal-700 transition-colors line-clamp-1">{{ $produk->nama_produk }}</h3>
                             <p class="text-gray-600 text-sm mb-4 line-clamp-2">{{ $produk->deskripsi ?? 'Tidak ada deskripsi.' }}</p>
                             <div class="flex justify-between items-center">

@@ -335,8 +335,10 @@
         /* Animasi Fade-in & Slide-up untuk konten utama */
         .animate-fade-in-up {
             opacity: 0;
-            transform: translateY(15px); /* Sedikit geser dari bawah */
-            animation: fadeInFromBottom 0.5s ease-out forwards; /* Durasi 0.5s */
+            transform: translateY(15px);
+            /* Sedikit geser dari bawah */
+            animation: fadeInFromBottom 0.5s ease-out forwards;
+            /* Durasi 0.5s */
         }
 
         @keyframes fadeInFromBottom {
@@ -344,6 +346,7 @@
                 opacity: 0;
                 transform: translateY(15px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -353,8 +356,10 @@
         /* Animasi Navbar: slide-down cepat */
         .animate-navbar-slide-down {
             opacity: 0;
-            transform: translateY(-20px); /* Geser dari atas */
-            animation: slideDownFadeIn 0.4s ease-out forwards; /* Durasi 0.4s, lebih cepat dari konten */
+            transform: translateY(-20px);
+            /* Geser dari atas */
+            animation: slideDownFadeIn 0.4s ease-out forwards;
+            /* Durasi 0.4s, lebih cepat dari konten */
         }
 
         @keyframes slideDownFadeIn {
@@ -362,6 +367,7 @@
                 opacity: 0;
                 transform: translateY(-20px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -369,18 +375,29 @@
         }
 
         /* Animasi Staggered Fade-in untuk Footer (lebih cepat) */
-        .stagger-fade-in > * {
+        .stagger-fade-in>* {
             opacity: 0;
             animation: fadeInFromBottom 0.5s ease-out forwards;
         }
 
         /* Penundaan singkat untuk setiap child di dalam .stagger-fade-in */
-        .stagger-fade-in > *:nth-child(1) { animation-delay: 0.1s; }
-        .stagger-fade-in > *:nth-child(2) { animation-delay: 0.2s; }
-        .stagger-fade-in > *:nth-child(3) { animation-delay: 0.3s; }
-        .stagger-fade-in > *:nth-child(4) { animation-delay: 0.4s; }
-        /* Sesuaikan delay jika ada lebih banyak elemen di level yang sama di footer */
+        .stagger-fade-in>*:nth-child(1) {
+            animation-delay: 0.1s;
+        }
 
+        .stagger-fade-in>*:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .stagger-fade-in>*:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        .stagger-fade-in>*:nth-child(4) {
+            animation-delay: 0.4s;
+        }
+
+        /* Sesuaikan delay jika ada lebih banyak elemen di level yang sama di footer */
     </style>
 </head>
 
@@ -469,9 +486,11 @@
                 <div class="flex space-x-6 mt-4 md:mt-0">
                     <a href="#"
                         class="text-gray-400 hover:text-white text-sm transition-colors duration-200">Privacy Policy</a>
-                    <a href="#" class="text-gray-400 hover:text-white text-sm transition-colors duration-200">Terms of
+                    <a href="#"
+                        class="text-gray-400 hover:text-white text-sm transition-colors duration-200">Terms of
                         Service</a>
-                    <a href="#" class="text-gray-400 hover:text-white text-sm transition-colors duration-200">Cookie
+                    <a href="#"
+                        class="text-gray-400 hover:text-white text-sm transition-colors duration-200">Cookie
                         Policy</a>
                 </div>
             </div>
