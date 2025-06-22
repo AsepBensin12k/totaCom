@@ -20,10 +20,12 @@
 **TotaCom** adalah sistem informasi berbasis web yang dirancang khusus untuk membantu CV. Toko Pertanian Sumberdadi dalam mengelola stok dan transaksi penjualan secara digital. Sistem ini menggabungkan manajemen inventori dengan platform e-commerce yang terintegrasi.
 
 ### 🎯 Tujuan Utama
-- **Digitalisasi Pencatatan**: Mengubah sistem pencatatan manual menjadi digital
-- **Efisiensi Operasional**: Mengurangi waktu pencatatan dari 10-15 menit menjadi 5 menit
-- **Minimalisasi Kesalahan**: Menurunkan tingkat kesalahan dari 5-10% menjadi 1-2%
-- **Penghematan Biaya**: Mengurangi penggunaan nota kertas hingga 70%
+- **🔄 Transformasi Digital**: Mengubah sistem pencatatan manual menjadi platform digital terintegrasi
+- **⚡ Efisiensi Operasional**: Mengoptimalkan proses bisnis dan mempercepat alur kerja operasional
+- **🎯 Akurasi Data**: Meningkatkan presisi pencatatan stok dan mengurangi human error
+- **💰 Optimasi Biaya**: Mengurangi biaya operasional dan meningkatkan profitabilitas bisnis
+- **🌐 Ekspansi Pasar**: Membuka peluang penjualan online dan memperluas jangkauan pelanggan
+- **📊 Business Intelligence**: Menyediakan analisis data untuk pengambilan keputusan strategis
 
 ---
 
@@ -111,7 +113,7 @@ php artisan key:generate
 
 1. **Buat Database MySQL**
 ```sql
-CREATE DATABASE totacom_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE totacom CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 ```
 
 2. **Konfigurasi Environment (.env)**
@@ -119,17 +121,10 @@ CREATE DATABASE totacom_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
 DB_PORT=3306
-DB_DATABASE=totacom_db
+DB_DATABASE=totacom
 DB_USERNAME=root
 DB_PASSWORD=
 
-# SMTP Configuration (Optional)
-MAIL_MAILER=smtp
-MAIL_HOST=smtp.gmail.com
-MAIL_PORT=587
-MAIL_USERNAME=your-email@gmail.com
-MAIL_PASSWORD=your-app-password
-MAIL_ENCRYPTION=tls
 ```
 
 ### 5️⃣ Database Migration & Seeding
@@ -168,9 +163,6 @@ php artisan view:cache
 ```bash
 # Development server
 php artisan serve
-
-# Atau dengan custom host dan port
-php artisan serve --host=0.0.0.0 --port=8080
 ```
 
 🎉 **Aplikasi siap digunakan di**: `http://localhost:8000`
@@ -178,20 +170,6 @@ php artisan serve --host=0.0.0.0 --port=8080
 ---
 
 ## 🔧 Konfigurasi Tambahan
-
-### SMTP Email Configuration
-Untuk fitur notifikasi email, konfigurasikan SMTP di file `.env`:
-
-```env
-MAIL_MAILER=smtp
-MAIL_HOST=smtp.gmail.com
-MAIL_PORT=587
-MAIL_USERNAME=totacom@gmail.com
-MAIL_PASSWORD=your-app-password
-MAIL_ENCRYPTION=tls
-MAIL_FROM_ADDRESS=totacom@gmail.com
-MAIL_FROM_NAME="${APP_NAME}"
-```
 
 ### File Upload Configuration
 ```bash
@@ -209,42 +187,17 @@ chmod -R 775 bootstrap/cache/
 
 ### Admin/Owner Account
 ```
-Email: admin@totacom.com
-Password: admin123
-Role: Owner
+Email: admin@gmail.com
+Password: admin01
+Role: Admin
 ```
 
 ### Customer Test Account
 ```
-Email: customer@totacom.com
-Password: customer123
+Email: customer@gmail.com
+Password: password
 Role: Customer
 ```
-
-*⚠️ **Penting**: Ganti password default setelah instalasi untuk keamanan!*
-
----
-
-## 📊 Struktur Database
-
-### Tabel Utama
-- `users` - Data pengguna (admin & customer)
-- `products` - Katalog produk pertanian
-- `orders` - Data pesanan
-- `order_items` - Detail item pesanan
-- `carts` - Keranjang belanja
-- `categories` - Kategori produk
-
-### Relasi Database
-```
-users (1) → (n) orders
-orders (1) → (n) order_items
-products (1) → (n) order_items
-users (1) → (n) carts
-products (1) → (n) carts
-```
-
----
 
 ## 🔄 Workflow Sistem
 
@@ -253,7 +206,7 @@ products (1) → (n) carts
 2. **Browse Produk** → Pilih produk pertanian
 3. **Tambah ke Keranjang** → Kelola item
 4. **Checkout** → Buat pesanan
-5. **Pembayaran** → Online (Transfer) / Offline (Cash)
+5. **Pembayaran** → Online (Transfer) / Offline (Cash-> pembelian Offline only)
 6. **Tracking** → Monitor status pesanan
 
 ### Status Pesanan
@@ -306,48 +259,17 @@ php artisan config:clear
 
 ---
 
-## 📈 Monitoring & Maintenance
-
-### Backup Rutin
-```bash
-# Backup database
-mysqldump -u root -p totacom_db > backup_$(date +%Y%m%d).sql
-
-# Backup files
-tar -czf totacom_backup_$(date +%Y%m%d).tar.gz /path/to/totacom/
-```
-
-### Update Maintenance
-- **Jadwal**: Setiap bulan pada pukul 23:00
-- **Durasi**: Maksimal 30 menit
-- **Aktivitas**: Update sistem, backup data, optimasi database
-
----
-
-## 📞 Support & Kontribusi
-
-### 🤝 Kontribusi
-Kami menerima kontribusi untuk pengembangan TotaCom:
-
-1. **Fork** repository ini
-2. **Buat branch** untuk fitur baru (`git checkout -b feature/AmazingFeature`)
-3. **Commit** perubahan (`git commit -m 'Add some AmazingFeature'`)
-4. **Push** ke branch (`git push origin feature/AmazingFeature`)
-5. **Buat Pull Request**
-
 ### 📞 Kontak
-- **Developer**: AsepBensin12k
+- **Developer**: AsepBensin12k & Mikopdf
 - **GitHub**: [AsepBensin12k/totaCom](https://github.com/AsepBensin12k/totaCom)
-- **Email**: support@totacom.com
+- **Email**: -
 - **Toko**: CV. Toko Pertanian Sumberdadi, Jl. Wolter Monginsidi No.89, Langsepam, Rowo Indah, Kec. Ajung, Kabupaten Jember, Jawa Timur 68175
 
 ---
 
 ## 📄 Lisensi
-
-Proyek ini dilisensikan di bawah [MIT License](LICENSE) - lihat file LICENSE untuk detail lengkap.
-
----
+Proyek ini merupakan Tugas Akhir Mata Kuliah Pengembangan Perangkat Lunak (PPL) Universitas Jember. Dikembangkan untuk tujuan akademik dan pembelajaran. Penggunaan atau modifikasi proyek ini untuk keperluan komersial memerlukan izin dari pengembang dan institusi terkait.
+© 2025 Tim B9, Mata Kuliah PPL, Universitas Jember
 
 ## 🙏 Acknowledgments
 
@@ -355,6 +277,8 @@ Proyek ini dilisensikan di bawah [MIT License](LICENSE) - lihat file LICENSE unt
 - **Universitas Jember** - Institusi pendukung
 - **Laravel Community** - Framework dan dokumentasi
 - **Tim B9** - Developer dan kontributor
+
+---
 
 ---
 
@@ -370,5 +294,3 @@ Proyek ini dilisensikan di bawah [MIT License](LICENSE) - lihat file LICENSE unt
 </div>
 
 ---
-
-*📝 **Catatan**: README ini akan terus diperbarui seiring dengan perkembangan proyek. Pastikan untuk selalu merujuk pada versi terbaru di repository.*
